@@ -1,7 +1,7 @@
 # WhoDunBit — Technical Design Document
 
 **Purpose:** Define WhoDunBit's technical requirements, system responsibilities and proposed architecture.  
-**Version:** 0.3  
+**Version:** 0.4  
 **Created:** 14 October 2026  
 **Updated:** 14 October 2026  
 **Status:** Pre-production technical design draft  
@@ -46,6 +46,8 @@ The architecture must support the following gameplay constraints.
 9. **Keep Monster shop pools separate.** Human Form equipment and mutations use independent balances.
 10. **Protect interactive preparation.** Prevent player damage, physical blocking and disruptive hostile effects while permitting ordinary preparation activity.
 11. **Delay Karma finalisation.** Incident evaluation and forgiveness must not become a source of hidden-allegiance information during the round.
+12. **Preserve responsive control.** Routine interactions must not be blocked solely by an unrelated animation. Deliberately committed actions need explicit restrictions and generally support cancellation.
+13. **Separate cosmetic appearance from role authority.** Player-selected models and appearance preferences do not establish faction, role or verification status.
 
 ## 3. Conceptual system boundaries
 
@@ -77,6 +79,7 @@ The domain model must represent these concepts independently. Concrete types and
 |---|---|---|
 | Actual player identity | The real participant/entity behind an action | Must remain available to authoritative evaluation when appearance changes |
 | Presented identity | Whom a player currently appears to be | Can change through Shapeshifter disguises |
+| Cosmetic appearance | Selected model, skin and any supported adjustments/accessories | Independent of actual role and distinct from adopting another player's identity |
 | Actual faction | Bystander, Enforcer, Monster or Minion initially | Must not be inferred from Human Form or presented appearance |
 | Victory allegiance | The side whose victory the player supports | Distinct from faction for Minions and future extensions |
 | Primary role | Faction-specific role such as Vampire or Detective | Does not get replaced by a disguise |
@@ -223,6 +226,46 @@ Monster-to-Monster damage and negative ability effects are disabled, including r
 
 Other active-round friendly-fire rules, self-damage and environmental damage remain open unless constrained by the GDD. Karma penalties do not inherently mean an attack is mechanically disabled.
 
+### 8.4 Responsive movement, weapons and actions
+
+Walking is the default movement mode; sprinting is available, with no stamina consumption currently planned. Movement tuning should prioritise crisp response over realistic inertia. Jumping, climbing and vaulting remain under consideration.
+
+Weapons should generally be controllable, with poor handling reserved for a deliberate weapon characteristic. Ordinary bullet damage must provide clear feedback without applying movement slowdown or partial incapacitation. Per-magazine tracking of spare ammunition is outside the current gameplay direction; detailed reload rules are TBD.
+
+Opening a door must remain possible during reloading. **Proposed action model:** Validate concurrent actions against explicit gameplay restrictions rather than treating an active animation as a global interaction lock. Animation should represent action state; it should not create incidental restrictions on unrelated interactions.
+
+Deliberate commitments may impose movement, view and interaction restrictions. Corpse consumption is a proposed example: stop movement and limit looking/interacting while consuming. Committed actions should generally support aborting. Exact restrictions, interruption events, cancellation costs and progress retention are TBD.
+
+**Proposed authority handling:** The host validates gameplay outcomes and commitment restrictions. Local presentation and networking should preserve responsive feedback while respecting those decisions. Prediction, reconciliation, animation blending and exact input handling remain implementation choices.
+
+### 8.5 Environmental and corpse physics
+
+Most environmental props are intended to use physics, with impact responses that may include movement or destruction. Some weapons may launch dead players; effects that launch living players remain under consideration. Prop carrying and body movement are also undecided.
+
+**Proposed physics approach:** Distinguish gameplay-relevant prop/corpse state from presentation where useful, and apply host authority to consequential interactions. Preparation protections must cover harmful or disruptive effects caused through props as well as direct attacks.
+
+**TBD:** Physics and ragdoll replication, collision rules, destruction representation, ownership/attribution, impulse handling, active-object budgets and the effect of moved bodies on investigation. Living-player knockback requires a separate design decision from ordinary gun-hit feedback.
+
+### 8.6 Character presentation and customisation
+
+Default base models are humanoid. Model selection must be independent of role, and future mod support should make adding compatible player models straightforward. The bundled roster may include guard and civilian models, but those appearances do not confer trusted status.
+
+**Proposed appearance model:** Keep model/skin selection, supported model adjustments and accessories separate from faction, role, known identity and active form. Optional preferences may select an Enforcer appearance or an ordinary human appearance used by Bystanders, human-looking Monsters and Minions. Preference resolution must preserve the intended information boundaries.
+
+Role information and verification need UI that uses legitimate recipient knowledge rather than assuming a particular model identifies a faction. The exact UI remains TBD, including verification and presentation during Shapeshifter impersonation.
+
+Monstrous forms replace the base model's presentation and allow more limited customisation. Shapeshifter disguises adopt an identity through their separate presentation rules. **TBD:** Which model, skin, adjustment and accessory properties a disguise copies, and how base appearance is restored after form or identity changes.
+
+Model adjustments, hats/accessories and separate appearance preferences are proposed features. Free model selection and host/server cosmetic unlock shops are alternative access options under consideration. Cosmetic currency, entitlement storage, persistence and links to any other economy are undefined.
+
+**TBD:** Model authoring/import workflow, rigs and animation compatibility, model validation, attachment points, collision/hitbox policy, network representation, content distribution and allowed Monster customisation. Arbitrary player appearance does not imply that model dimensions define gameplay collision.
+
+### 8.7 Rendering, camera and feedback
+
+The visual target is grounded, moderately detailed realism with a performance-conscious presentation. Default scenes should be readable; maps and Monster abilities may provide specific atmosphere or visibility effects. Rendering pipeline, quality tiers, asset budgets and target hardware remain TBD.
+
+Camera sway and intrusive damage effects are likely to be omitted. Head bob and recoil are likely to be included, with head bob optional. Screen shake is likely to be reserved for meaningful gameplay or environmental events. These are presentation targets for playtesting; final effects, intensities and settings remain TBD.
+
 ## 9. Inventory, shops and mutation state
 
 ### 9.1 Shop structure
@@ -257,6 +300,8 @@ Purchases, inventory, equipment, mutations and balances are host-authoritative.
 Corpse consumption is host-authoritative. A completed consumption removes the dead player's body and grants the Shapeshifter that player's appearance/identity. The Shapeshifter can store multiple identities, switch among them and return to its original appearance at any time. Consumption does not require ownership of the kill. Enforcer impersonation is host-configurable.
 
 The Shapeshifter keeps its own Human Form rather than acquiring the consumed victim's role capabilities. Ordinary disguise switching is distinct from monstrous combat transformation.
+
+Consumption is intended to expose the Shapeshifter through a deliberate action commitment. The proposed movement/view/interaction restrictions and abort behaviour are described in section 8.4; exact consumption rules remain TBD.
 
 **TBD:** Consumption duration, identity limit, interruption/cancellation rules, concurrent corpse interactions, identity UI and which aspects of clothing, names, voice or equipment a disguise copies.
 
@@ -320,7 +365,7 @@ Configuration should provide straightforward presets with advanced settings. Int
 
 ### 13.1 Long-term content scope
 
-Modding is a foundational priority. Community content should extend the game without modifying its source. Intended extension areas include maps, weapons, equipment, roles across all factions, mutations, transformations, abilities, factions, rules, victory conditions and presets. Initial release scope is TBD.
+Modding is a foundational priority. Community content should extend the game without modifying its source. Intended extension areas include maps, weapons, equipment, player models, roles across all factions, mutations, transformations, abilities, factions, rules, victory conditions and presets. Initial release scope is TBD. Custom player models require a defined compatibility and import workflow as described in section 8.6.
 
 Common content should use reusable functionality and data where practical, with custom code for mechanics existing systems cannot express. Early architecture should preserve useful extension points; the full distribution and runtime ecosystem can follow core gameplay validation.
 
@@ -389,6 +434,11 @@ The proposed validation strategy combines focused system tests with multiplayer 
 | Karma | Action-time knowledge informs evaluation; forgiveness applies only to the victim's incidents; mitigation cannot generate bonus Karma; ineligible rounds do not recover Karma |
 | Round outcomes | Agreed victory, time-expiry and disconnect policies resolve consistently and reveal information only at permitted times |
 | Modding, when scoped | Selected compatibility rules catch unsupported content/settings rather than silently assuming identical host/client content |
+| Responsiveness | Walking/sprinting feel crisp; door use remains available during reloads; routine interactions are not blocked solely by animations |
+| Action commitments | Supported commitments enforce their defined restrictions and abort rules consistently without unintended retained locks |
+| Physical interactions | Prop movement/destruction and corpse impulses behave consistently; preparation protections survive indirect physical effects |
+| Character presentation | Model choices do not establish roles; appearance preferences, form replacements and disguises preserve the intended identity and knowledge rules |
+| Camera and readability | Ordinary hits remain clear without movement penalties or intrusive obscuring effects; head bob can be disabled if included |
 
 Playtesting should assess whether beginners understand the objective, Monsters feel powerful but answerable, role demonstrations preserve believable deception, preparation limits downtime and investigation creates useful uncertainty.
 
@@ -403,14 +453,18 @@ Playtesting should assess whether beginners understand the objective, Monsters f
 | Data and architecture | Definition format, IDs, runtime state model, assemblies/modules, serialization and events |
 | Allocation | Random algorithm, contention policy, invalid capacity handling, re-selection and late/disconnected players |
 | Information security | Recipient visibility details, Enforcer verification, survival/spectator information and capacity disclosures |
-| Combat and forms | Item compatibility, effect attribution, ongoing effects during transformation, finishing/resistance rules and transition behaviour |
+| Movement and actions | Movement/sprint tuning; jumping/climbing/vaulting; concurrent-action model; commitment restrictions; abort controls, costs and progress |
+| Combat and forms | Weapon/recoil tuning, reload rules, item compatibility, effect attribution, ongoing effects during transformation, finishing/resistance rules and transition behaviour |
+| Physics | Prop/corpse replication, collision, destruction, impulses, budgets, carrying/body movement and possible living-player knockback |
 | Economy | Item/mutation schemas, prices, balances, concurrency behaviour, regeneration and Karma-to-pool mapping |
 | Corpses and revival | Consumption conflicts/cancellation, disguise channels, identity limits and revival mechanics/availability |
 | Karma | Formulas, context/knowledge records, aggregation, self-defence, finalisation, forgiveness window and storage |
 | Configuration | Schema, validation/fallbacks, shareable presets, scaling and mod-defined settings |
 | Modding | API boundaries, packaging, assets, scripting, Workshop, dependencies, synchronisation, security and version policy |
 | Nonfunctional targets | Frame rate, latency, hardware, bandwidth, performance budgets and profiling criteria |
-| Presentation/input | Rendering pipeline, UI framework, audio/voice, input and accessibility implementation; not selected |
+| Presentation/input | Rendering pipeline, UI framework, asset budgets, camera tuning/settings, audio/voice, input and wider accessibility implementation |
+| Character appearance | Custom-model workflow; rigs/animations; adjustments/accessories; appearance preferences; hitbox policy; verification UI; disguise copying and Monster customisation |
+| Cosmetic access | Free selection versus host/server unlock shops; currency, entitlements, persistence and release scope |
 | Build/release | CI, test tooling, Steam SDK integration, release process and distribution details |
 
 Gameplay dependencies, including victory rules, role abilities and preparation inventory policy, require specification in the GDD before their implementation is finalised.
@@ -422,3 +476,4 @@ Gameplay dependencies, including victory rules, role abilities and preparation i
 | 14 October 2026 | 0.1 — Initial technical design baseline. |
 | 14 October 2026 | 0.2 — Revised structure and terminology for a conventional TDD; requirements, architecture proposals and outstanding decisions retained. |
 | 14 October 2026 | 0.3 — Applied the repository documentation header standard and updated documentation location. |
+| 14 October 2026 | 0.4 — Added responsive action, physics and presentation requirements; documented proposed commitment handling, character customisation and their open implementation decisions. |

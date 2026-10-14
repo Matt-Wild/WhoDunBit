@@ -1,7 +1,7 @@
 # WhoDunBit — Game Design Document
 
 **Purpose:** Define WhoDunBit's player experience, gameplay systems and content direction.  
-**Version:** 0.3  
+**Version:** 0.4  
 **Created:** 14 October 2026  
 **Updated:** 14 October 2026  
 **Status:** Pre-production design draft  
@@ -28,7 +28,7 @@ The defining deception mechanic is **Human Forms**: Monsters and Minions receive
 | Longer-term hosting goal | Community-hosted dedicated servers |
 | Foundational priority | Extensive community modding and host configurability |
 
-WhoDunBit draws on these inspirations while using original code, assets, branding and implementations. Detailed art direction, setting, narrative, age rating, controller support and accessibility requirements are TBD.
+WhoDunBit draws on these inspirations while using original code, assets, branding and implementations. The visual direction is modernised Garry's Mod semi-realism: grounded, moderately detailed and performance-conscious, with humour emerging from gameplay. Section 16 covers presentation and character appearance. Setting, narrative, age rating, controller support and wider accessibility requirements are TBD.
 
 ## 2. Design pillars
 
@@ -40,6 +40,8 @@ WhoDunBit draws on these inspirations while using original code, assets, brandin
 6. **Minimal downtime.** Preparation and role allocation happen while players explore and interact with the map.
 7. **Emergent interactions.** Deception, cooperation and unusual tactics should emerge from interacting systems, without bespoke rules for every scenario.
 8. **Gameplay before unnecessary complexity.** Validate a fun core experience early and expand incrementally. Modular systems support that growth.
+9. **Responsiveness before simulation detail.** Movement should feel crisp, weapons controllable and interactions straightforward. Animation and realistic handling details should support play without imposing incidental delays or bookkeeping.
+10. **Grounded presentation, emergent humour.** The base game takes its visual world seriously. Humour arises primarily from player behaviour, physical interactions and unexpected gameplay outcomes.
 
 ## 3. Core round experience
 
@@ -200,13 +202,19 @@ Other players must not learn who is selecting what through the selection interfa
 
 **TBD:** Exact interface layout, transition feedback and timing of shop access.
 
-## 8. Combat, transformations and identity
+## 8. Movement, combat, interactions and transformations
 
 ### 8.1 Ordinary combat
 
 First-person firearms and map equipment underpin play across factions. Human-side players need to avoid indiscriminate friendly violence; Monsters have powerful supernatural options in addition to human cover.
 
-**TBD:** Movement tuning, weapon catalogue, damage values, ammunition model, inventory limits, other friendly-fire rules and detailed health/death behaviour.
+Combat pacing and weapon balance prioritise enjoyment over simulation. Guns should generally be easy to control. Poor handling may distinguish a particular weapon when it serves that weapon's design.
+
+Taking ordinary bullet damage does not reduce movement speed or partially incapacitate the player. Being hit must still be clearly communicated. Exact feedback and weapon lethality require playtesting.
+
+Ammunition handling should be simple. Players do not track the remaining rounds in each individual spare magazine. Other reload and ammunition rules remain TBD.
+
+**TBD:** Weapon catalogue, damage values, time to kill, handling/recoil tuning, detailed ammunition rules, inventory limits, other friendly-fire rules and detailed health/death behaviour.
 
 ### 8.2 Human and monstrous forms
 
@@ -225,6 +233,48 @@ Revealing supernatural power should involve a meaningful loss of deception. Reve
 A Shapeshifter's identity changes preserve its functional Human Form abilities. It retains its assigned Human Form when adopting a disguise; consuming a victim does not grant their role abilities.
 
 True identity, presented identity and active ability/physical form must remain distinct concepts.
+
+### 8.4 Movement
+
+Walking is the default movement mode, with sprinting available as an option. No stamina consumption is currently planned. Acceleration, stopping and directional changes should feel crisp and responsive; realistic inertia is secondary to control and enjoyment.
+
+**Under consideration:** Jumping, climbing and vaulting. None is currently a committed traversal feature.
+
+**TBD:** Movement speeds, acceleration/deceleration, sprint behaviour and the final traversal set.
+
+### 8.5 Interactions and deliberate commitments
+
+Routine interactions should remain straightforward during other actions. A player can open a door while reloading without waiting for the reload animation to finish. Reloading does not require individual-magazine bookkeeping.
+
+Additional player-interaction animations may be introduced where they improve expression or communicate an action. Their visual duration should not automatically block unrelated actions.
+
+Some actions deliberately require commitment and exposure. **Proposed corpse-consumption behaviour:** The Shapeshifter stops moving, has limited freedom to look around and cannot freely interact with nearby objects or equipment while consuming a body. The exact restrictions are TBD.
+
+Committed actions should generally provide a way to abort. Cancellation behaviour, progress retention, costs and exceptional actions that cannot be cancelled require individual specification.
+
+### 8.6 Physical interactions
+
+Physical chaos is a major part of the intended experience. Most environmental props are intended to be physics objects. Some can be pushed by impacts; others can be destroyed when hit. Prop behaviour should provide opportunities for unscripted situations while fitting the performance-conscious presentation.
+
+**Proposed weapon behaviour:** Some weapons may send dead players flying. Applying similar effects to living players is also under consideration, separate from ordinary bullet-hit feedback.
+
+**Under consideration:** Carrying props and moving bodies. Their controls, restrictions and effects on investigation are TBD.
+
+**TBD:** Prop collision and obstruction rules, destruction scope, corpse physics, special weapon impulses and any living-player knockback mechanics. Preparation protections continue to apply to disruptive player effects.
+
+### 8.7 Camera and feedback
+
+Camera behaviour and damage feedback require playtesting. The current direction is restrained presentation that preserves player control and scene readability.
+
+| Element | Current direction |
+|---|---|
+| Camera sway | Likely omitted |
+| Head bob | Likely included, with an option to disable it |
+| Weapon recoil | Likely included; tuning should support generally controllable weapons |
+| Damage feedback | Clear indication of hits with minimal visual intrusion |
+| Screen shake | Likely reserved for meaningful gameplay or environmental events |
+
+Specific effects, intensities and settings remain TBD. Ordinary damage feedback should not obscure the scene or impose movement penalties.
 
 ## 9. Role concepts
 
@@ -391,11 +441,45 @@ Monster teammate recognition and protection from other Monsters remain mandatory
 
 **Proposed:** Shareable configuration presets. Their format and distribution are open.
 
-**Long-term modding ambition:** Community maps, weapons, equipment, roles across all four factions, mutations, transformations, abilities, factions, rules, victory conditions and configuration presets. Modders should be able to add content without modifying the proprietary game source and register relevant settings such as cooldowns, health, shop contents or compatibility.
+**Long-term modding ambition:** Community maps, weapons, equipment, player models, roles across all four factions, mutations, transformations, abilities, factions, rules, victory conditions and configuration presets. Modders should be able to add content without modifying the proprietary game source and register relevant settings such as cooldowns, health, shop contents or compatibility. Adding custom player models should be straightforward within the eventual model compatibility requirements.
 
 Steam Workshop, mod packaging, custom scripting, dependencies and compatibility are addressed in the TDD. Initial modding scope and release timing are TBD.
 
-## 16. Branding and commercial direction
+## 16. Visual direction, character appearance and branding
+
+### 16.1 Visual aesthetic
+
+The target is a modernised Garry's Mod aesthetic: relatively realistic characters, objects and environments with moderate detail and a performance-friendly presentation. Models should use believable proportions and materials without excessive visual complexity or a requirement for very high fidelity.
+
+The base game's visual tone is grounded. Humour comes primarily from gameplay, social situations and physics. Responsive controls and entertaining outcomes take priority when simulation detail would make play cumbersome. The aim is to preserve Garry's Mod's semi-realistic chaos while giving WhoDunBit a coherent visual presentation.
+
+### 16.2 Atmosphere and readability
+
+The default presentation should be clear and readable. Maps may establish their own atmosphere, lighting and visibility conditions, and Monster abilities may deliberately alter those conditions. Darkness or visual obstruction should serve the map or ability rather than define the entire game's baseline.
+
+**TBD:** Detailed asset and lighting guidelines, technical budgets and the limits of individual visibility effects.
+
+### 16.3 Base character models and role presentation
+
+Bundled base character models are humanoid. Players should be able to choose their base appearance independently of their gameplay role, with support for adding custom models through modding. A model's appearance is not proof of faction or role.
+
+Role identification and Enforcer verification should use appropriate UI and information rules. A guard model must not automatically establish Enforcer allegiance, and a civilian model must not establish innocence. Exact UI and verification mechanics remain TBD, including their behaviour under Shapeshifter impersonation.
+
+**Proposed bundled roster:** Several authoritative-looking models, such as guards, that suit Enforcer preferences, alongside civilian models suited to ordinary Bystander play. These are thematic options rather than faction-locked models.
+
+**Proposed appearance preferences:** Separate choices for a player's Enforcer appearance and their ordinary human appearance. The ordinary human preference would also cover disguised Monsters and Minions. Preferences select presentation without defining the player's actual role or allegiance.
+
+### 16.4 Customisation and access
+
+**Proposed features:** Model-specific adjustment options and optional hats or accessories, including playful choices. The grounded base aesthetic should accommodate player expression without requiring every default model to be comedic.
+
+Players may initially choose models freely. An alternative or later feature is host/server point shops for unlocking models or skins. Access policy, currency, progression, persistence and release scope are TBD. Cosmetic point shops have no defined connection to equipment points, mutation points or Karma.
+
+On entering a monstrous form, the player's base character model is effectively replaced by the Monster form. Customisation of that form is intended to be more limited than base-character customisation. Shapeshifter human disguises remain a separate identity-presentation mechanic.
+
+**TBD:** Supported model adjustments, accessory rules, appearance-preference UI, mod compatibility, Monster customisation and how disguises reproduce models and accessories.
+
+### 16.5 Branding and commercial direction
 
 **Current preference:** WhoDunBit, a playful variation of “whodunnit” whose “bit” suggests a supernatural attack. The desired tone is playful, catchy, slightly dark and suited to chaotic multiplayer.
 
@@ -410,7 +494,9 @@ This register collects unresolved decisions; entries do not imply an agreed solu
 | Area | Open decisions |
 |---|---|
 | Core match | Maximum players; full faction presets; round duration; exact victory and timeout rules; Minion-only survival outcomes |
-| Weapons and movement | Starting loadouts; map distribution; catalogue; inventory/ammunition rules; movement and damage tuning |
+| Weapons and movement | Starting loadouts; map distribution; catalogue; detailed reload/ammunition rules; damage and recoil tuning; movement speeds and sprint behaviour; jumping, climbing and vaulting |
+| Physical interactions | Prop destruction/collision rules; corpse physics; weapons launching dead or living players; carrying props and moving bodies |
+| Action commitments | Restrictions during corpse consumption; cancellation controls; progress and costs on abort; other committed actions |
 | Roles | Initial roster; precise abilities; Bystander Investigator versus Enforcer Detective; Enforcer verification |
 | Allocation | Default capacities; duplicate policy; insufficient-capacity fallbacks; invalid or simultaneous choices; late joins/disconnects; visibility of capacity information |
 | Preparation | Ammunition replenishment; retained items; ability and shop access; environmental damage/interactions; phase feedback |
@@ -420,7 +506,9 @@ This register collects unresolved decisions; entries do not imply an agreed solu
 | Communication | Channels, voice implementation, spectator rules and dead-player restrictions |
 | Karma | Penalty amounts; thresholds/recovery; Minion rules; self-defence; mitigation; forgiveness timing; persistence |
 | Scaling | Role-specific formulas, faction-composition inputs and when scaling is applied |
-| Presentation | Detailed visual style, narrative, audio direction, accessibility and input support |
+| Presentation | Asset/lighting guidelines; playtested camera and damage feedback; optional head-bob implementation; narrative, audio direction, wider accessibility and input support |
+| Character customisation | Bundled model roster; appearance preferences; adjustments/accessories; custom-model compatibility; UI verification; disguise presentation; Monster customisation |
+| Cosmetic access | Free selection versus host/server unlock shops; currency, progression, persistence and release scope |
 | Release | Final scope, milestones, pricing and schedule |
 
 ## 18. Revision history
@@ -430,3 +518,4 @@ This register collects unresolved decisions; entries do not imply an agreed solu
 | 14 October 2026 | 0.1 — Initial design baseline. |
 | 14 October 2026 | 0.2 — Revised structure and terminology for a conventional GDD; gameplay rules and outstanding decisions retained. |
 | 14 October 2026 | 0.3 — Applied the repository documentation header standard. |
+| 14 October 2026 | 0.4 — Established visual direction and responsive gameplay principles; added movement, weapon handling, physical interactions, action commitments, camera direction and character customisation, retaining tentative features as proposals. |
