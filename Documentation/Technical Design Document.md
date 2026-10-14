@@ -1,7 +1,7 @@
 # WhoDunBit — Technical Design Document
 
 **Purpose:** Define WhoDunBit's technical requirements, system responsibilities and proposed architecture.  
-**Version:** 0.4  
+**Version:** 0.5  
 **Created:** 14 October 2026  
 **Updated:** 14 October 2026  
 **Status:** Pre-production technical design draft  
@@ -16,7 +16,8 @@ This document defines technical requirements, system responsibilities and the pr
 | Topic | Specification / status |
 |---|---|
 | Engine direction | Unity 6.3 LTS |
-| Reference Editor version | 6000.3.14f1; project version to be recorded during project setup |
+| Reference Editor version | 6000.3.14f1; recorded in `WhoDunBit Project/ProjectSettings/ProjectVersion.txt` |
+| Rendering baseline | URP 17.3.0 with the template's Forward+ renderer; see [Initial Project Configuration](Project%20Configuration.md) for applied settings |
 | Language | C# |
 | Initial target | Windows PC, intended Steam distribution |
 | Initial multiplayer direction | Host-authoritative listen server providing a P2P-style experience |
@@ -262,7 +263,7 @@ Model adjustments, hats/accessories and separate appearance preferences are prop
 
 ### 8.7 Rendering, camera and feedback
 
-The visual target is grounded, moderately detailed realism with a performance-conscious presentation. Default scenes should be readable; maps and Monster abilities may provide specific atmosphere or visibility effects. Rendering pipeline, quality tiers, asset budgets and target hardware remain TBD.
+The visual target is grounded, moderately detailed realism with a performance-conscious presentation. Default scenes should be readable; maps and Monster abilities may provide specific atmosphere or visibility effects. The initial project uses URP 17.3.0 with Forward+ rendering. The applied desktop settings and their trade-offs are recorded in [Initial Project Configuration](Project%20Configuration.md). Final quality tiers, asset budgets and target hardware remain TBD.
 
 Camera sway and intrusive damage effects are likely to be omitted. Head bob and recoil are likely to be included, with head bob optional. Screen shake is likely to be reserved for meaningful gameplay or environmental events. These are presentation targets for playtesting; final effects, intensities and settings remain TBD.
 
@@ -391,7 +392,7 @@ The main game remains proprietary. A proposed public modding SDK would expose su
 
 The intended repository setup is private Git hosting with proprietary source, a Unity `.gitignore` and a tracked Unity project version. Collaborator permissions and contribution ownership are TBD before additional developers join.
 
-Unity 6.3 LTS / 6000.3.14f1 is the reference Editor version. Record the project version in `ProjectSettings/ProjectVersion.txt` during setup. Engine upgrades should be justified against compatibility and project needs.
+Unity 6.3 LTS / 6000.3.14f1 is the reference Editor version. The project is in `WhoDunBit Project/`, with the Editor version recorded in its `ProjectSettings/ProjectVersion.txt`. A Unity `.gitignore` at the project root excludes generated files while retaining source assets, metadata, package manifests/lockfile and project settings. Engine upgrades should be justified against compatibility and project needs.
 
 Architecture and package choices should be evaluated against the current codebase. Network library, scene structure, build pipeline and test tooling are TBD.
 
@@ -446,7 +447,7 @@ Playtesting should assess whether beginners understand the objective, Monsters f
 
 | Area | Unresolved decisions / required input |
 |---|---|
-| Unity setup | Project creation, layout, package choices and recording the Editor version |
+| Unity setup | Further project/module layout and package choices; initial project and configuration are established |
 | Networking | Library, Steam transport/relay, replication model, movement synchronisation, tick rate, prediction and lag handling |
 | Sessions | Population limits, authentication/discovery, reconnects, late joins, host migration and disconnect policies |
 | Dedicated hosting | Server architecture, builds, discovery, administration and deployment |
@@ -462,7 +463,7 @@ Playtesting should assess whether beginners understand the objective, Monsters f
 | Configuration | Schema, validation/fallbacks, shareable presets, scaling and mod-defined settings |
 | Modding | API boundaries, packaging, assets, scripting, Workshop, dependencies, synchronisation, security and version policy |
 | Nonfunctional targets | Frame rate, latency, hardware, bandwidth, performance budgets and profiling criteria |
-| Presentation/input | Rendering pipeline, UI framework, asset budgets, camera tuning/settings, audio/voice, input and wider accessibility implementation |
+| Presentation/input | Final quality tiers, UI framework, asset budgets, camera tuning/settings, audio/voice, input bindings and wider accessibility implementation |
 | Character appearance | Custom-model workflow; rigs/animations; adjustments/accessories; appearance preferences; hitbox policy; verification UI; disguise copying and Monster customisation |
 | Cosmetic access | Free selection versus host/server unlock shops; currency, entitlements, persistence and release scope |
 | Build/release | CI, test tooling, Steam SDK integration, release process and distribution details |
@@ -477,3 +478,4 @@ Gameplay dependencies, including victory rules, role abilities and preparation i
 | 14 October 2026 | 0.2 — Revised structure and terminology for a conventional TDD; requirements, architecture proposals and outstanding decisions retained. |
 | 14 October 2026 | 0.3 — Applied the repository documentation header standard and updated documentation location. |
 | 14 October 2026 | 0.4 — Added responsive action, physics and presentation requirements; documented proposed commitment handling, character customisation and their open implementation decisions. |
+| 14 October 2026 | 0.5 — Recorded the created Unity project, URP/Forward+ baseline and Git exclusions; linked the complete initial configuration record. |

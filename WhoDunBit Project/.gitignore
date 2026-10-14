@@ -1,0 +1,72 @@
+# Unity project root: generated data can be rebuilt from Assets, Packages and ProjectSettings.
+# Reference: https://github.com/github/gitignore/blob/main/Unity.gitignore
+
+# Unity caches, temporary files and local Editor preferences
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+/.utmp/
+/[Ee]xported[Oo]bj/
+/[Ss]ysinfo.txt
+/mono_crash.*
+*.log
+
+# Builds, profiler captures and recordings
+/[Bb]uild/
+/[Bb]uilds/
+/[Mm]emoryCaptures/
+/[Rr]ecordings/
+*.apk
+*.aab
+*.app
+
+# Generated IDE projects, caches and personal preferences
+/.vs/
+/.idea/
+/.consulo/
+/.gradle/
+/*.csproj
+/*.unityproj
+/*.sln
+/*.slnx
+*.suo
+*.user
+*.userprefs
+*.DotSettings.user
+*.opendb
+*.VC.db
+
+# Temporary files and Blender backups (including their generated metadata)
+*.tmp
+*.bak
+*.blend1
+*.blend1.meta
+*.blend2
+*.blend2.meta
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Regenerated IDE integration and Unity tool caches
+/[Aa]ssets/Plugins/Editor/JetBrains*
+/UIElementsSchema/
+/[Aa]ssets/[Ss]ceneDependencyCache*
+/[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
+/[Aa]ssets/Unity.VisualScripting.Generated/VisualScripting.Flow/UnitOptions.db
+/[Aa]ssets/Unity.VisualScripting.Generated/VisualScripting.Flow/UnitOptions.db.meta
+/[Aa]ssets/Unity.VisualScripting.Generated/VisualScripting.Core/Property Providers/
+/[Aa]ssets/Unity.VisualScripting.Generated/VisualScripting.Core/Property Providers.meta
+
+# Generated Addressables output; keep authored definitions and content-update state.
+/ServerData/
+/[Aa]ssets/StreamingAssets/aa/
+/[Aa]ssets/StreamingAssets/aa.meta
+/[Aa]ssets/AddressableAssetsData/link.xml
+/[Aa]ssets/AddressableAssetsData/link.xml.meta
+/[Aa]ssets/Addressables_Temp/
+/[Aa]ssets/Addressables_Temp.meta
+
+# Do not ignore .meta files, Packages/manifest.json, Packages/packages-lock.json,
+# ProjectSettings, source assets or native/managed plugins: they belong in Git.
