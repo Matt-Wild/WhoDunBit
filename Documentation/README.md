@@ -1,11 +1,17 @@
 # WhoDunBit documentation
 
-Design documentation for WhoDunBit, a multiplayer social deduction FPS. Both documents are pre-production drafts, last updated **14 October 2026**.
+**Purpose:** Index the project's design documentation and documentation standards.  
+**Created:** 14 October 2026  
+**Updated:** 14 October 2026  
+**Related documents:** [Documentation Standards](Documentation%20Standards.md)
+
+Design documentation for WhoDunBit, a multiplayer social deduction FPS. The GDD and TDD are pre-production drafts.
 
 | Document | Purpose |
 |---|---|
 | [Game Design Document](Game%20Design%20Document.md) | Player experience, gameplay systems, factions, roles, content direction and open game design decisions. |
 | [Technical Design Document](Technical%20Design%20Document.md) | Technical requirements, proposed architecture, networking, system responsibilities and open implementation decisions. |
+| [Documentation Standards](Documentation%20Standards.md) | Header format and metadata conventions for repository documentation. |
 
 ## Document scope
 

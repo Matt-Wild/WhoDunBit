@@ -1,9 +1,11 @@
 # WhoDunBit — Game Design Document
 
-**Version:** 0.2  
-**Last updated:** 14 October 2026  
+**Purpose:** Define WhoDunBit's player experience, gameplay systems and content direction.  
+**Version:** 0.3  
+**Created:** 14 October 2026  
+**Updated:** 14 October 2026  
 **Status:** Pre-production design draft  
-**Related document:** [Technical Design Document](Technical%20Design%20Document.md)
+**Related documents:** [Technical Design Document](Technical%20Design%20Document.md)
 
 This document defines WhoDunBit's player experience, gameplay systems and content direction. Proposed features are identified where relevant; unresolved rules are marked **TBD**. Numerical balance values are provisional and subject to playtesting.
 
@@ -427,3 +429,4 @@ This register collects unresolved decisions; entries do not imply an agreed solu
 |---|---|
 | 14 October 2026 | 0.1 — Initial design baseline. |
 | 14 October 2026 | 0.2 — Revised structure and terminology for a conventional GDD; gameplay rules and outstanding decisions retained. |
+| 14 October 2026 | 0.3 — Applied the repository documentation header standard. |

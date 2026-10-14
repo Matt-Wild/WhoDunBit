@@ -1,9 +1,11 @@
 # WhoDunBit — Technical Design Document
 
-**Version:** 0.2  
-**Last updated:** 14 October 2026  
+**Purpose:** Define WhoDunBit's technical requirements, system responsibilities and proposed architecture.  
+**Version:** 0.3  
+**Created:** 14 October 2026  
+**Updated:** 14 October 2026  
 **Status:** Pre-production technical design draft  
-**Related document:** [Game Design Document](Game%20Design%20Document.md)
+**Related documents:** [Game Design Document](Game%20Design%20Document.md)
 
 This document defines technical requirements, system responsibilities and the proposed architecture for WhoDunBit. Requirements describe intended behaviour; architectural approaches remain proposals pending implementation and validation. Unresolved choices are marked **TBD**.
 
@@ -419,3 +421,4 @@ Gameplay dependencies, including victory rules, role abilities and preparation i
 |---|---|
 | 14 October 2026 | 0.1 — Initial technical design baseline. |
 | 14 October 2026 | 0.2 — Revised structure and terminology for a conventional TDD; requirements, architecture proposals and outstanding decisions retained. |
+| 14 October 2026 | 0.3 — Applied the repository documentation header standard and updated documentation location. |
