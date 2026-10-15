@@ -12,6 +12,7 @@ Design documentation for WhoDunBit, a multiplayer social deduction FPS. The GDD 
 | [Game Design Document](Game%20Design%20Document.md) | Player experience, gameplay systems, factions, roles, content direction and open game design decisions. |
 | [Technical Design Document](Technical%20Design%20Document.md) | Technical requirements, proposed architecture, networking, system responsibilities and open implementation decisions. |
 | [Initial Project Configuration](Project%20Configuration.md) | Applied Unity settings, before/after values, retained defaults, Git exclusions and validation scope. |
+| [Main Menu and Multiplayer Entry Plan](Multiplayer%20Menu%20Plan.md) | Proposed Unity Services host/join milestone, profile flow, waiting map, hotjoining, implementation sequence and acceptance checks. |
 | [Documentation Standards](Documentation%20Standards.md) | Header format and metadata conventions for repository documentation. |
 
 ## Document scope

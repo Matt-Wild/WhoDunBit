@@ -1,7 +1,7 @@
 # WhoDunBit — Technical Design Document
 
 **Purpose:** Define WhoDunBit's technical requirements, system responsibilities and proposed architecture.  
-**Version:** 0.5  
+**Version:** 0.6  
 **Created:** 14 October 2026  
 **Updated:** 14 October 2026  
 **Status:** Pre-production technical design draft  
@@ -21,7 +21,9 @@ This document defines technical requirements, system responsibilities and the pr
 | Language | C# |
 | Initial target | Windows PC, intended Steam distribution |
 | Initial multiplayer direction | Host-authoritative listen server providing a P2P-style experience |
+| Initial online testing | Unity Services; specific services and integration choices TBD |
 | Future goal | Community-hosted dedicated servers without a complete gameplay rewrite |
+| Future platform integration | Steam support; exact integration and transport TBD |
 | Content strategy | Modular and reusable systems, with extensive future modding |
 | Networking framework | TBD |
 | Mod packaging/runtime scripting | TBD |
@@ -103,11 +105,11 @@ Human-role definitions should be reusable across Bystanders and hostile Human Fo
 
 ### 5.1 Hosting model
 
-The preferred initial model is a listen server. One player runs the authoritative simulation while participating in the game. Other clients connect to that host, providing a friend-hosted, P2P-style experience with central simulation authority.
+The initial player-hosted model is a listen server. One player runs the authoritative simulation while participating in the game. Other clients connect to that host, providing a friend-hosted, P2P-style experience with central simulation authority.
 
-Candidate connection mechanisms include Steam networking, relay services and direct connections. Transport selection is TBD.
+Initial multiplayer testing is to use Unity Services. Steam support is planned for a later stage. The specific Unity services, networking library, transport and Steam integration remain TBD.
 
-Future dedicated hosting should reuse core gameplay. The proposed architecture separates simulation authority from the host's local player interface. Dedicated-server deployment design is TBD.
+The networking design must accommodate both player-hosted and future dedicated-server sessions. **Proposed architecture:** Separate authoritative gameplay from the host's local player interface, and keep service/platform integration sufficiently isolated to support later providers. Dedicated-server deployment and connection mechanisms are TBD.
 
 ### 5.2 Authoritative responsibilities
 
@@ -127,7 +129,7 @@ Clients submit actions or requests rather than directly changing authoritative s
 
 ### 5.3 Framework and transport selection
 
-The networking library and Steam integration are TBD. Selection criteria include host authority, control over replicated information, mod synchronisation, FPS performance, Steam connectivity, maintainability and dedicated-server support.
+Unity Services is the initial testing direction. It does not by itself select a networking library or transport. Specific service/package choices are TBD. Selection criteria include hotjoining, host authority, control over replicated information, mod synchronisation, FPS performance, maintainability, future Steam integration and dedicated-server support.
 
 Transport-specific integration should have a limited impact on reusable gameplay code. Abstraction should remain proportional to the prototype's needs.
 
@@ -135,7 +137,19 @@ Transport-specific integration should have a limited impact on reusable gameplay
 
 ### 5.4 Failure and continuity policies
 
-**TBD:** Host migration support, reconnection, late joining, disconnect handling, session discovery, lobby ownership, authentication and dedicated-server orchestration.
+Hotjoining is required: a running session must accept new connections without being recreated. New clients need an authoritative view of the current session/round phase and the state they are entitled to receive. Hotjoin connectivity does not yet determine when a joining player participates in a round.
+
+**TBD:** Hotjoin snapshot/synchronisation strategy, phase-specific spawning and role assignment, spectator behaviour, host migration, reconnection, disconnect handling, session discovery, lobby ownership, authentication and dedicated-server orchestration.
+
+### 5.5 Host flow and save profiles
+
+Player-hosted session entry follows `Main menu → Host → Select save profile → Load lobby`.
+
+Profile selection precedes loading into the lobby. Profile contents, storage, creation/management, schema/versioning and the relationship to host configuration are TBD. This flow does not yet define world persistence or a progression system.
+
+The lobby enters indefinite waiting preparation until at least three players are present, counting the host in player-hosted sessions. Preparation protections apply during this waiting state. The authoritative session must prevent the waiting state from advancing into round preparation before that threshold is met.
+
+**TBD:** Which connected/loaded/ready state counts toward the threshold; automatic versus manual start after the threshold is met; population-drop handling; profile failure/recovery; and how future dedicated servers select equivalent configuration without a local host menu.
 
 ## 6. Hidden information and recipient knowledge
 
@@ -173,11 +187,13 @@ Review role availability updates, selection feedback, apparent identity, death/s
 
 The round follows this sequence:
 
-`Lobby → Initial preparation → Primary role allocation → Human Form allocation → Final preparation → Active round → Post-round evaluation/summary → Next round`
+`Lobby / indefinite waiting preparation (minimum 3 players) → Initial timed preparation → Primary role allocation → Human Form allocation → Final preparation → Active round → Post-round evaluation/summary → Next round`
+
+Waiting preparation has no fixed duration. It is distinct from the existing timed preparation stages and must not expire into a round below three players. Crossing the threshold permits timed preparation; the start trigger and population-drop policy are TBD. Whether subsequent rounds return to the waiting state when population is insufficient also requires specification.
 
 **TBD:** State-machine implementation and the ordering of summary presentation, contextual mitigation and forgiveness within the post-round stage.
 
-At preparation start, players spawn into the map and learn their faction. Reveal primary roles when resolved, then hostile Human Forms after that stage. Final preparation gives everyone their complete role information before active play.
+At timed round-preparation start, players enter the round's spawn/faction-assignment flow. Reveal primary roles when resolved, then hostile Human Forms after that stage. Final preparation gives everyone their complete role information before active play. Faction/role disclosure is not required merely to occupy the waiting lobby.
 
 **TBD:** Exact victory conditions, timeout handling, simultaneous victory outcomes, empty-lobby/disconnect transitions and Minion survival after the last Monster dies.
 
@@ -197,7 +213,7 @@ Primary roles and hostile Human Forms are assigned randomly by default. Two inde
 
 ### 7.3 Preparation timing and interaction
 
-**Provisional timing:** Initial 5 seconds; primary 5 seconds automatically or 15 with choice; Human Form 5 seconds automatically or 15 with choice; final 10 seconds. Totals are 25, 35 or 45 seconds depending on selection settings. All are configurable initial test values.
+**Provisional timing:** Initial 5 seconds; primary 5 seconds automatically or 15 with choice; Human Form 5 seconds automatically or 15 with choice; final 10 seconds. Totals are 25, 35 or 45 seconds depending on selection settings, excluding indefinite waiting preparation. All are configurable initial test values.
 
 Preparation permits exploration, pickup, firing and appropriate map interactions. Player-on-player damage, physical blocking and disruptive hostile effects are disabled. Selection menus open voluntarily through a configurable hotkey.
 
@@ -434,6 +450,8 @@ The proposed validation strategy combines focused system tests with multiplayer 
 | Corpses | Valid consumption removes the body and grants the correct disguise; ownership of the kill does not restrict consumption |
 | Karma | Action-time knowledge informs evaluation; forgiveness applies only to the victim's incidents; mitigation cannot generate bonus Karma; ineligible rounds do not recover Karma |
 | Round outcomes | Agreed victory, time-expiry and disconnect policies resolve consistently and reveal information only at permitted times |
+| Host entry and waiting lobby | Host selects a save profile before lobby entry; waiting preparation has no timeout into a round below three players; threshold handling follows the agreed start policy |
+| Hotjoining | Existing sessions accept new connections; clients receive the correct phase and permitted state; spawning/role assignment follow the eventual phase-specific policy |
 | Modding, when scoped | Selected compatibility rules catch unsupported content/settings rather than silently assuming identical host/client content |
 | Responsiveness | Walking/sprinting feel crisp; door use remains available during reloads; routine interactions are not blocked solely by animations |
 | Action commitments | Supported commitments enforce their defined restrictions and abort rules consistently without unintended retained locks |
@@ -448,8 +466,9 @@ Playtesting should assess whether beginners understand the objective, Monsters f
 | Area | Unresolved decisions / required input |
 |---|---|
 | Unity setup | Further project/module layout and package choices; initial project and configuration are established |
-| Networking | Library, Steam transport/relay, replication model, movement synchronisation, tick rate, prediction and lag handling |
-| Sessions | Population limits, authentication/discovery, reconnects, late joins, host migration and disconnect policies |
+| Networking | Specific Unity Services/testing integration, library and transport; future Steam integration; replication, movement synchronisation, tick rate, prediction and lag handling |
+| Sessions | Population limits; authentication/discovery; hotjoin state synchronisation and phase-specific participation; readiness counting; start trigger; population drops; reconnects, host migration and disconnect policies |
+| Save profiles | Contents, configuration mapping, storage/schema/versioning, creation/management, failure handling and dedicated-server equivalents |
 | Dedicated hosting | Server architecture, builds, discovery, administration and deployment |
 | Data and architecture | Definition format, IDs, runtime state model, assemblies/modules, serialization and events |
 | Allocation | Random algorithm, contention policy, invalid capacity handling, re-selection and late/disconnected players |
@@ -479,3 +498,4 @@ Gameplay dependencies, including victory rules, role abilities and preparation i
 | 14 October 2026 | 0.3 — Applied the repository documentation header standard and updated documentation location. |
 | 14 October 2026 | 0.4 — Added responsive action, physics and presentation requirements; documented proposed commitment handling, character customisation and their open implementation decisions. |
 | 14 October 2026 | 0.5 — Recorded the created Unity project, URP/Forward+ baseline and Git exclusions; linked the complete initial configuration record. |
+| 14 October 2026 | 0.6 — Recorded host/profile/lobby entry, three-player waiting preparation, hotjoining and Unity Services for initial multiplayer testing; retained future Steam and dedicated-server requirements with integration choices open. |

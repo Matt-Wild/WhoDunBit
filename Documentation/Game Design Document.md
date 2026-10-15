@@ -1,7 +1,7 @@
 # WhoDunBit — Game Design Document
 
 **Purpose:** Define WhoDunBit's player experience, gameplay systems and content direction.  
-**Version:** 0.4  
+**Version:** 0.5  
 **Created:** 14 October 2026  
 **Updated:** 14 October 2026  
 **Status:** Pre-production design draft  
@@ -25,7 +25,9 @@ The defining deception mechanic is **Human Forms**: Monsters and Minions receive
 | Intended distribution | Steam |
 | Business model | Commercial standalone game |
 | Initial hosting direction | Friend-hosted, host-authoritative listen server with a P2P-style experience |
+| Initial multiplayer testing | Unity Services |
 | Longer-term hosting goal | Community-hosted dedicated servers |
+| Future platform networking | Steam support |
 | Foundational priority | Extensive community modding and host configurability |
 
 WhoDunBit draws on these inspirations while using original code, assets, branding and implementations. The visual direction is modernised Garry's Mod semi-realism: grounded, moderately detailed and performance-conscious, with humour emerging from gameplay. Section 16 covers presentation and character appearance. Setting, narrative, age rating, controller support and wider accessibility requirements are TBD.
@@ -45,10 +47,29 @@ WhoDunBit draws on these inspirations while using original code, assets, brandin
 
 ## 3. Core round experience
 
+### 3.1 Hosting and joining
+
+For player-hosted sessions, the host follows this flow:
+
+1. Select **Host** from the main menu.
+2. Select a save profile.
+3. Load into the lobby.
+4. Remain in an indefinite preparation state while waiting for at least three players in total, including the host.
+
+The waiting lobby uses the interactive preparation experience: players can occupy the map and interact under preparation protections. It has no countdown that can expire into an active round while fewer than three players are present. The three-player minimum allows the session to proceed to normal round preparation.
+
+Joining is based on hotjoining: players can connect to an existing session without requiring the host to recreate the lobby or restart the session. Participation rules for a player arriving during timed preparation or an active round are TBD; hotjoining does not yet define whether that player immediately spawns, spectates or waits for the next round.
+
+Save-profile contents and persistence scope are TBD. Selecting a profile is part of the hosting flow; it does not establish persistent world state, progression or a particular save format.
+
+**TBD:** Automatic versus host-triggered start after reaching three players; what happens if population falls below three during preparation or a round; hotjoin role allocation and spawning; profile creation/management and the joining interface.
+
+### 3.2 Round loop
+
 A typical round proceeds as follows.
 
 1. Players join a lobby using the host's chosen rules, faction distribution and role availability.
-2. Preparation begins. Players spawn around the map and immediately learn their faction.
+2. Timed round preparation begins after the waiting-lobby population requirement is met. Players spawn around the map and learn their faction at the start of round preparation.
 3. Players explore, gather weapons and equipment, and interact with the environment.
 4. Players receive or choose primary roles within their assigned factions.
 5. Monsters and Minions then receive or choose functional Human Forms from remaining eligible Bystander capacity.
@@ -173,7 +194,7 @@ Players never have to open a selection menu. Unselected roles are randomly assig
 
 ### 7.1 Permitted activity and protections
 
-Players spawn into the map and remain active during preparation while role allocation takes place.
+Players occupy the map during the indefinite waiting preparation and remain active during timed round preparation while role allocation takes place. Faction and role assignment belong to timed round preparation; the waiting lobby does not require completed assignments.
 
 They can move, run, explore, pick up weapons, gather equipment, fire weapons and interact with appropriate environmental objects. They cannot damage one another, physically block one another or apply disruptive hostile effects to other players.
 
@@ -181,7 +202,7 @@ They can move, run, explore, pick up weapons, gather equipment, fire weapons and
 
 ### 7.2 Timing
 
-The following provisional defaults are host-configurable.
+The following provisional defaults are host-configurable and apply to timed round preparation. Time spent in the indefinite waiting lobby is additional and has no fixed duration.
 
 | Preparation stage | Automatic allocation | Player selection enabled for that stage |
 |---|---:|---:|
@@ -194,7 +215,7 @@ This produces 25 seconds with both stages automatic, 35 seconds with one selecti
 
 ### 7.3 Progressive information and interface
 
-Players learn their faction at preparation start, their primary role and relevant abilities after primary allocation, and their Human Form and related equipment/abilities after Human Form allocation. Players have complete role information during final preparation.
+Players learn their faction at the start of timed round preparation, their primary role and relevant abilities after primary allocation, and their Human Form and related equipment/abilities after Human Form allocation. Players have complete role information during final preparation.
 
 Selection menus open through a configurable hotkey. Players can ignore them and receive automatic assignments. The interface should support quick navigation and may use a discreet availability indicator.
 
@@ -498,7 +519,9 @@ This register collects unresolved decisions; entries do not imply an agreed solu
 | Physical interactions | Prop destruction/collision rules; corpse physics; weapons launching dead or living players; carrying props and moving bodies |
 | Action commitments | Restrictions during corpse consumption; cancellation controls; progress and costs on abort; other committed actions |
 | Roles | Initial roster; precise abilities; Bystander Investigator versus Enforcer Detective; Enforcer verification |
-| Allocation | Default capacities; duplicate policy; insufficient-capacity fallbacks; invalid or simultaneous choices; late joins/disconnects; visibility of capacity information |
+| Session flow | Start trigger after three players arrive; population falling below three; hotjoin spawning, role allocation and spectator rules; joining interface |
+| Save profiles | Contents, persistence scope, creation/management and relationship to host configuration |
+| Allocation | Default capacities; duplicate policy; insufficient-capacity fallbacks; invalid or simultaneous choices; hotjoin/disconnect handling; visibility of capacity information |
 | Preparation | Ammunition replenishment; retained items; ability and shop access; environmental damage/interactions; phase feedback |
 | Transformations | Reversibility by role; timing/cooldowns; equipment compatibility; permanent finishing; Shapeshifter identity limits and consumption duration |
 | Economy | Starting points; prices; regeneration; shop timing; Karma effects on two Monster pools |
@@ -519,3 +542,4 @@ This register collects unresolved decisions; entries do not imply an agreed solu
 | 14 October 2026 | 0.2 — Revised structure and terminology for a conventional GDD; gameplay rules and outstanding decisions retained. |
 | 14 October 2026 | 0.3 — Applied the repository documentation header standard. |
 | 14 October 2026 | 0.4 — Established visual direction and responsive gameplay principles; added movement, weapon handling, physical interactions, action commitments, camera direction and character customisation, retaining tentative features as proposals. |
+| 14 October 2026 | 0.5 — Added Host/save-profile/lobby flow, indefinite waiting preparation below three players and hotjoining; recorded Unity Services testing and future Steam support. |

@@ -12,7 +12,7 @@ The game combines map exploration, equipment gathering and hidden-role interacti
 
 ## Development direction
 
-The project is in pre-production, targeting Windows PC and Steam using Unity and C#. The initial multiplayer direction is friend-hosted, host-authoritative play. Extensive host configuration, community modding and future dedicated servers are central long-term goals.
+The project is in pre-production, targeting Windows PC and Steam using Unity and C#. Initial multiplayer testing will use Unity Services for friend-hosted, host-authoritative play with hotjoining. Steam integration and dedicated servers are planned for later stages, alongside extensive host configuration and community modding.
 
 ## Documentation
 
