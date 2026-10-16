@@ -1,0 +1,5 @@
+# Standalone build output folders at the repository root.
+/Windows Build/
+/Linux Build/
+/Mac Build/
+/macOS Build/
