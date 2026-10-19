@@ -1,9 +1,9 @@
 # WhoDunBit — Game Design Document
 
 **Purpose:** Define WhoDunBit's player experience, gameplay systems and content direction.  
-**Version:** 0.5  
+**Version:** 0.6  
 **Created:** 14 October 2026  
-**Updated:** 14 October 2026  
+**Updated:** 18 October 2026  
 **Status:** Pre-production design draft  
 **Related documents:** [Technical Design Document](Technical%20Design%20Document.md)
 
@@ -470,7 +470,7 @@ Steam Workshop, mod packaging, custom scripting, dependencies and compatibility 
 
 ### 16.1 Visual aesthetic
 
-The target is a modernised Garry's Mod aesthetic: relatively realistic characters, objects and environments with moderate detail and a performance-friendly presentation. Models should use believable proportions and materials without excessive visual complexity or a requirement for very high fidelity.
+The target is a modernised Garry's Mod aesthetic: relatively realistic characters, objects and environments with moderate detail and a performance-friendly presentation. The grounded baseline uses believable proportions and materials without excessive visual complexity or a requirement for very high fidelity. Player character options, including future custom models, may introduce goofy appearances and varied body proportions.
 
 The base game's visual tone is grounded. Humour comes primarily from gameplay, social situations and physics. Responsive controls and entertaining outcomes take priority when simulation detail would make play cumbersome. The aim is to preserve Garry's Mod's semi-realistic chaos while giving WhoDunBit a coherent visual presentation.
 
@@ -483,6 +483,8 @@ The default presentation should be clear and readable. Maps may establish their 
 ### 16.3 Base character models and role presentation
 
 Bundled base character models are humanoid. Players should be able to choose their base appearance independently of their gameplay role, with support for adding custom models through modding. A model's appearance is not proof of faction or role.
+
+Shared character animations should target a sensibly proportioned humanoid reference model. Character compatibility should accommodate varied body proportions rather than require every avatar to match that reference. **Proposed adaptation:** Use inverse kinematics (IK) where precise contact or alignment is needed, particularly for hands holding weapons. Supported proportion ranges and any model-specific adjustments remain TBD.
 
 Role identification and Enforcer verification should use appropriate UI and information rules. A guard model must not automatically establish Enforcer allegiance, and a civilian model must not establish innocence. Exact UI and verification mechanics remain TBD, including their behaviour under Shapeshifter impersonation.
 
@@ -543,3 +545,4 @@ This register collects unresolved decisions; entries do not imply an agreed solu
 | 14 October 2026 | 0.3 — Applied the repository documentation header standard. |
 | 14 October 2026 | 0.4 — Established visual direction and responsive gameplay principles; added movement, weapon handling, physical interactions, action commitments, camera direction and character customisation, retaining tentative features as proposals. |
 | 14 October 2026 | 0.5 — Added Host/save-profile/lobby flow, indefinite waiting preparation below three players and hotjoining; recorded Unity Services testing and future Steam support. |
+| 18 October 2026 | 0.6 — Established a sensibly proportioned reference for shared humanoid animations while accommodating varied character proportions; recorded IK as a proposed alignment approach. |

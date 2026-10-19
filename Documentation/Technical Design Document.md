@@ -1,9 +1,9 @@
 # WhoDunBit — Technical Design Document
 
 **Purpose:** Define WhoDunBit's technical requirements, system responsibilities and proposed architecture.  
-**Version:** 0.6  
+**Version:** 0.7  
 **Created:** 14 October 2026  
-**Updated:** 14 October 2026  
+**Updated:** 18 October 2026  
 **Status:** Pre-production technical design draft  
 **Related documents:** [Game Design Document](Game%20Design%20Document.md)
 
@@ -267,6 +267,8 @@ Most environmental props are intended to use physics, with impact responses that
 
 Default base models are humanoid. Model selection must be independent of role, and future mod support should make adding compatible player models straightforward. The bundled roster may include guard and civilian models, but those appearances do not confer trusted status.
 
+**Animation direction:** Author shared animations against a sensibly proportioned humanoid reference model while accommodating character models with varied, potentially exaggerated proportions. Similar proportions are not a universal model-compatibility requirement. **Proposed approach:** Retarget shared humanoid animations and use IK for precise alignment where needed, particularly weapon grips. Per-model pose offsets, reach limits, IK blending during actions and any exceptional animation overrides require validation. The IK implementation, supported proportion ranges and authoring/validation workflow remain TBD; animation retargeting and IK alone do not guarantee acceptable results for every model.
+
 **Proposed appearance model:** Keep model/skin selection, supported model adjustments and accessories separate from faction, role, known identity and active form. Optional preferences may select an Enforcer appearance or an ordinary human appearance used by Bystanders, human-looking Monsters and Minions. Preference resolution must preserve the intended information boundaries.
 
 Role information and verification need UI that uses legitimate recipient knowledge rather than assuming a particular model identifies a faction. The exact UI remains TBD, including verification and presentation during Shapeshifter impersonation.
@@ -499,3 +501,4 @@ Gameplay dependencies, including victory rules, role abilities and preparation i
 | 14 October 2026 | 0.4 — Added responsive action, physics and presentation requirements; documented proposed commitment handling, character customisation and their open implementation decisions. |
 | 14 October 2026 | 0.5 — Recorded the created Unity project, URP/Forward+ baseline and Git exclusions; linked the complete initial configuration record. |
 | 14 October 2026 | 0.6 — Recorded host/profile/lobby entry, three-player waiting preparation, hotjoining and Unity Services for initial multiplayer testing; retained future Steam and dedicated-server requirements with integration choices open. |
+| 18 October 2026 | 0.7 — Added shared reference-character animation direction, support for varied character proportions and proposed retargeting/IK adaptation with compatibility limits left open. |
