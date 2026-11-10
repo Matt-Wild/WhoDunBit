@@ -5,6 +5,7 @@ using WhoDunBit.Utilities;
 
 namespace WhoDunBit.Player
 {
+    [DefaultExecutionOrder(-128)]
     [RequireComponent(typeof(CharacterController))]
     public class PlayerMovement : PlayerNetworkBehaviour
     {
@@ -23,11 +24,13 @@ namespace WhoDunBit.Player
         [Header("Vertical Movement")]
         [SerializeField, Min(0f)] private float _groundStickSpeed = 2f;
         [SerializeField] private float _gravity = -20f;
+        [SerializeField] private float _jumpStrength = 4f;
 
         [Header("Input")]
         [SerializeField] private InputActionReference _moveAction;
         [SerializeField] private InputActionReference _walkAction;
         [SerializeField] private InputActionReference _sprintAction;
+        [SerializeField] private InputActionReference _jumpAction;
         [SerializeField] private InputActionReference _lookAction;
 
         private Vector3 _previousPosition;
@@ -37,11 +40,19 @@ namespace WhoDunBit.Player
 
         public CharacterController Controller => _controller;
 
+        public event System.Action Jumped;
+        public event System.Action<float> Landed;
+
+        // Variables that need to be synced across clients
+        private NetworkVariable<bool> _networkGrounded = new(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
         public Vector3 WorldVelocity => Master.IsLocallyControlled ? _controller.velocity : _worldVelocity;
         public Vector3 LocalVelocity => transform.InverseTransformDirection(WorldVelocity);
         public float WalkSpeed => _walkSpeed;
         public float RunSpeed => _runSpeed;
         public float SprintSpeed => _sprintSpeed;
+        public float VerticalSpeed => Master.IsLocallyControlled ? _verticalSpeed : _worldVelocity.y;
+        public bool IsGrounded => Master.IsLocallyControlled ? _controller.isGrounded : _networkGrounded.Value;
 
         private void Awake()
         {
@@ -63,10 +74,7 @@ namespace WhoDunBit.Player
                 return;
             }
 
-            _moveAction.action.Enable();
-            _walkAction.action.Enable();
-            _sprintAction.action.Enable();
-            _lookAction.action.Enable();
+            SetActionsEnabled(true);
 
             CursorUtility.SetLocked(true);
         }
@@ -78,10 +86,7 @@ namespace WhoDunBit.Player
                 return;
             }
 
-            _moveAction.action.Disable();
-            _walkAction.action.Disable();
-            _sprintAction.action.Disable();
-            _lookAction.action.Disable();
+            SetActionsEnabled(false);
 
             CursorUtility.SetLocked(false);
         }
@@ -154,16 +159,75 @@ namespace WhoDunBit.Player
 
             Vector3 velocity = (transform.right * input.x + transform.forward * input.y) * speed;
 
-            // Sticks the player to the ground while grounded
-            if (_controller.isGrounded && _verticalSpeed < 0f)
+            // Jumping and landing logic
+            bool wasGrounded = IsGrounded;
+            bool jumped = false;
+            if (wasGrounded && _verticalSpeed < 0f)
             {
-                _verticalSpeed = -_groundStickSpeed;
+                // Jump behaviour
+                if (_jumpAction.action.WasPressedThisFrame())
+                {
+                    _verticalSpeed = _jumpStrength;
+                    jumped = true;
+                }
+
+                // Make the player stick to the ground a bit if not jumping
+                else
+                {
+                    _verticalSpeed = -_groundStickSpeed;
+                }
             }
 
             _verticalSpeed += _gravity * Time.deltaTime;
             velocity.y = _verticalSpeed;
 
+            float impactSpeed = Mathf.Max(0f, -_verticalSpeed);
+
             _controller.Move(velocity * Time.deltaTime);
+
+            _networkGrounded.Value = _controller.isGrounded;
+
+            // Fire movement events (these should be sent to other clients too)
+            if (jumped)
+            {
+                NotifyJumpedRpc();
+            }
+            else if (!wasGrounded && IsGrounded)
+            {
+                NotifyLandedRpc(impactSpeed);
+            }
+        }
+
+        [Rpc(SendTo.Everyone, InvokePermission = RpcInvokePermission.Owner)]
+        private void NotifyJumpedRpc()
+        {
+            Jumped?.Invoke();
+        }
+
+        [Rpc(SendTo.Everyone, InvokePermission = RpcInvokePermission.Owner)]
+        private void NotifyLandedRpc(float impactSpeed)
+        {
+            Landed?.Invoke(impactSpeed);
+        }
+
+        private void SetActionsEnabled(bool enabled)
+        {
+            if (enabled)
+            {
+                _moveAction.action.Enable();
+                _walkAction.action.Enable();
+                _sprintAction.action.Enable();
+                _jumpAction.action.Enable();
+                _lookAction.action.Enable();
+            }
+            else
+            {
+                _moveAction.action.Disable();
+                _walkAction.action.Disable();
+                _sprintAction.action.Disable();
+                _jumpAction.action.Disable();
+                _lookAction.action.Disable();
+            }
         }
     }
 }

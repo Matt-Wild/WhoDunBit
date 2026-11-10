@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace WhoDunBit.Player
 {
+    [DefaultExecutionOrder(128)]
     public class PlayerAnimation : PlayerBehaviour
     {
         [Header("Fetched")]
@@ -13,8 +14,14 @@ namespace WhoDunBit.Player
         // Animator parameter hashes
         private static readonly int ForwardAxisHash = Animator.StringToHash("ForwardAxis");
         private static readonly int RightAxisHash = Animator.StringToHash("RightAxis");
+        private static readonly int JumpHash = Animator.StringToHash("Jump");
+        private static readonly int MovingHash = Animator.StringToHash("Moving");
+        private static readonly int GroundedHash = Animator.StringToHash("Grounded");
 
         private Vector2 _smoothedHorizontalVelocity;
+
+        private bool _waitingForAirborne = false;
+        private bool _isMoving = false;
 
         private void Awake()
         {
@@ -25,12 +32,34 @@ namespace WhoDunBit.Player
         {
             base.Init(master);
 
+            // Subscribe to movement events
+            if (Master && Master.Movement)
+            {
+                Master.Movement.Jumped += OnJumped;
+                Master.Movement.Landed += OnLanded;
+            }
+            else
+            {
+                Debug.LogWarning("Could not subscribe to movement events - Master or Movement not found!", this);
+            }
+
             CompensateForSkinWidth();
         }
 
         private void OnValidate()
         {
             EnsureAnimator();
+        }
+
+        private void OnDestroy()
+        {
+            if (!Master || !Master.Movement)
+            {
+                return;
+            }
+
+            Master.Movement.Jumped -= OnJumped;
+            Master.Movement.Landed -= OnLanded;
         }
 
         private void Update()
@@ -45,8 +74,8 @@ namespace WhoDunBit.Player
 
         private void UpdateLocomotionParams()
         {
-            // This requires the animator, player master, and player movement to be valid
-            if (!_animator || !Master || !Master.Movement)
+            // This requires the animator, player master, and network spawned player movement to be valid
+            if (!_animator || !Master || !Master.Movement || !Master.Movement.IsSpawned)
             {
                 return;
             }
@@ -95,9 +124,39 @@ namespace WhoDunBit.Player
                 axes = Vector2.zero;
             }
 
+            // Reset waiting for airborne if airborne
+            bool grounded = Master.Movement.IsGrounded;
+            if (!grounded)
+            {
+                _waitingForAirborne = false;
+            }
+
+            // Update if animator should treat player as moving (this avoids flickering)
+            _isMoving = speed > (_isMoving ? 0.1f : 0.2f);
+
             // Update locomotion parameters
             _animator.SetFloat(RightAxisHash, axes.x);
             _animator.SetFloat(ForwardAxisHash, axes.y);
+            _animator.SetBool(GroundedHash, grounded && !_waitingForAirborne);
+            _animator.SetBool(MovingHash, _isMoving);
+        }
+
+        private void OnJumped()
+        {
+            // Fire trigger in animator and ensure not grounded
+            if (_animator)
+            {
+                _animator.SetBool(GroundedHash, false);
+                _animator.SetTrigger(JumpHash);
+
+                // Ignore grounded signals until airborne detected
+                _waitingForAirborne = true;
+            }
+        }
+
+        private void OnLanded(float impactSpeed)
+        {
+
         }
 
         private void CompensateForSkinWidth()
