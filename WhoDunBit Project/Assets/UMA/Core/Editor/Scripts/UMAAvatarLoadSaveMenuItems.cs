@@ -71,6 +71,9 @@ namespace UMA.Editors
 
 			SkinnedMeshRenderer[] renderers = avatar.umaData.GetRenderers();
 			int meshno = 0;
+            // All renderers share an export folder: keep material and texture
+            // filenames unique across the entire avatar.
+            int Material = 0;
 			foreach (SkinnedMeshRenderer smr in renderers)
 			{
 				Material[] omats = smr.sharedMaterials;
@@ -80,7 +83,6 @@ namespace UMA.Editors
                     mats[i] = new Material(omats[i]);
                 }
 
-                int Material = 0;
 				foreach (Material m in mats)
 				{
 					// get each texture.

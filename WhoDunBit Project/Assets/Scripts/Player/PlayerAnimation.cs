@@ -61,8 +61,33 @@ namespace WhoDunBit.Player
             // Walk speed should never be 0 for animation purposes
             float walkSpeed = Mathf.Max(0.1f, Master.Movement.WalkSpeed);
 
-            // Calculate horizontal axes in relation to walk speed
-            Vector2 axes = Vector2.ClampMagnitude(_smoothedHorizontalVelocity / walkSpeed, 1f);
+            // Run speed should never be slower than walking
+            float runSpeed = Mathf.Max(walkSpeed, Master.Movement.RunSpeed);
+
+            // Sprint speed should never be slower than running
+            float sprintSpeed = Mathf.Max(runSpeed, Master.Movement.SprintSpeed);
+
+            // Get current speed
+            float speed = _smoothedHorizontalVelocity.magnitude;
+
+            float radius;
+            if (speed <= walkSpeed)
+            {
+                // Stationary -> walking: radius 0 -> 1
+                radius = speed / walkSpeed;
+            }
+            else if (speed <= runSpeed)
+            {
+                // Walking -> running: radius 1 -> 2
+                radius = 1f + Mathf.InverseLerp(walkSpeed, runSpeed, speed);
+            }
+            else
+            {
+                // Running -> sprinting: radius 2 -> 3
+                radius = 2f + Mathf.InverseLerp(runSpeed, sprintSpeed, speed);
+            }
+
+            Vector2 axes = _smoothedHorizontalVelocity.normalized * radius;
 
             // Treat very small movements as being still
             if (axes.sqrMagnitude < 0.0001f)

@@ -1084,6 +1084,7 @@ GameObject:
   - component: {fileID: 353993677}
   - component: {fileID: 353993682}
   - component: {fileID: 353993683}
+  - component: {fileID: 353993684}
   m_Layer: 0
   m_Name: UMADynamicCharacterAvatar
   m_TagString: Untagged
@@ -2873,7 +2874,39 @@ MonoBehaviour:
   characterHeight: 2
   characterRadius: 0.25
   characterMass: 50
---- !u!95 &353993683
+--- !u!114 &353993683
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 353993674}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74ea9524f26d57548a9f99b6e3da50f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UMA_Core::UMA.CharacterSystem.DCARendererManager
+  RendererElements:
+  - rendererAssets:
+    - {fileID: 11400000, guid: 9d8e6cc74ed2e4641bc1b780d8cdfbb5, type: 2}
+    slotAssets:
+    - {fileID: 11400000, guid: bdd55e27c6850d64fb01592e11424e79, type: 2}
+    - {fileID: 11400000, guid: d875ad325d19b924f961f76ec21a1737, type: 2}
+    - {fileID: 11400000, guid: deb3453bc9bb8564aa6e03f0fe057a91, type: 2}
+    - {fileID: 11400000, guid: 8b232fbd9c99b3149bc6c4f6cb7afb7d, type: 2}
+    - {fileID: 11400000, guid: fecb11cda78ad5743a2886ebc787630e, type: 2}
+    wardrobeSlots:
+    - Face
+    - Eyes
+    - Body
+    - Eyebrows
+    - Beard
+    - Ears
+    - Helmet
+    - AlternateHead
+  RenderersEnabled: 1
+  showHelp: 1
+--- !u!95 &353993684
 Animator:
   serializedVersion: 7
   m_ObjectHideFlags: 0

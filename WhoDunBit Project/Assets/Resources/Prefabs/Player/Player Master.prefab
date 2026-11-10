@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2278784544088935312}
+  - component: {fileID: 5244759553302420691}
   - component: {fileID: 2716823263882120199}
   - component: {fileID: 6357808648785360667}
   - component: {fileID: 7580240071415890747}
@@ -27,13 +28,25 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1401212109880925794}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.6, z: 0.056}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.6, z: 0.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6765440982587217902}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5244759553302420691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1401212109880925794}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2918f6b050c5b54ba239cc49ebe18b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WhoDunBit.Player.PlayerCamera
 --- !u!20 &2716823263882120199
 Camera:
   m_ObjectHideFlags: 0
@@ -65,7 +78,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.06
+  near clip plane: 0.04
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -190,9 +203,13 @@ MonoBehaviour:
   _cameraTransform: {fileID: 2278784544088935312}
   _mouseSensitivity: 0.1
   _walkSpeed: 1.9
+  _runSpeed: 4
+  _sprintSpeed: 6
   _groundStickSpeed: 2
   _gravity: -20
   _moveAction: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  _walkAction: {fileID: -3009278295278145618, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  _sprintAction: {fileID: -7471211009204490832, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   _lookAction: {fileID: -5630151704836100654, guid: 052faaac586de48259a63d0c4782560b, type: 3}
 --- !u!143 &8799051035139834059
 CharacterController:
@@ -212,13 +229,13 @@ CharacterController:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Height: 1.75
+  m_Height: 1.6
   m_Radius: 0.2
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0.875, z: 0}
+  m_Center: {x: 0, y: 0.8, z: 0}
 --- !u!114 &690755978988381474
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -310,7 +327,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61eb9b6fcee75e24bb33c22297896e9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WhoDunBit.PlayerAnimation
-  _animator: {fileID: 7867339991121777051}
+  _animator: {fileID: 2161976552626730035}
   _compensateForSkinWidth: 1
 --- !u!1 &8257166974850152127
 GameObject:
@@ -388,6 +405,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   _movement: {fileID: 950634971245114148}
   _animation: {fileID: 8589650109821881356}
+  _camera: {fileID: 5244759553302420691}
   _playerCamera: {fileID: 2716823263882120199}
   _audioListener: {fileID: 6357808648785360667}
 --- !u!1001 &7178648885173548391
@@ -447,9 +465,9 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 93c29c9b3cbc100479efd25d6e907e35, type: 3}
---- !u!95 &7867339991121777051 stripped
+--- !u!95 &2161976552626730035 stripped
 Animator:
-  m_CorrespondingSourceObject: {fileID: 1058846368363980028, guid: 93c29c9b3cbc100479efd25d6e907e35, type: 3}
+  m_CorrespondingSourceObject: {fileID: 9052038545003233620, guid: 93c29c9b3cbc100479efd25d6e907e35, type: 3}
   m_PrefabInstance: {fileID: 7178648885173548391}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &8612890265285805265 stripped

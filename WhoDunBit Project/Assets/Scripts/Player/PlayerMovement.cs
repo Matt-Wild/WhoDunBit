@@ -16,7 +16,9 @@ namespace WhoDunBit.Player
         [SerializeField] private float _mouseSensitivity = 0.1f;
 
         [Header("Horizontal Movement")]
-        [SerializeField] private float _walkSpeed = 5f;
+        [SerializeField] private float _walkSpeed = 2f;
+        [SerializeField] private float _runSpeed = 4f;
+        [SerializeField] private float _sprintSpeed = 6f;
 
         [Header("Vertical Movement")]
         [SerializeField, Min(0f)] private float _groundStickSpeed = 2f;
@@ -24,6 +26,8 @@ namespace WhoDunBit.Player
 
         [Header("Input")]
         [SerializeField] private InputActionReference _moveAction;
+        [SerializeField] private InputActionReference _walkAction;
+        [SerializeField] private InputActionReference _sprintAction;
         [SerializeField] private InputActionReference _lookAction;
 
         private Vector3 _previousPosition;
@@ -36,6 +40,8 @@ namespace WhoDunBit.Player
         public Vector3 WorldVelocity => Master.IsLocallyControlled ? _controller.velocity : _worldVelocity;
         public Vector3 LocalVelocity => transform.InverseTransformDirection(WorldVelocity);
         public float WalkSpeed => _walkSpeed;
+        public float RunSpeed => _runSpeed;
+        public float SprintSpeed => _sprintSpeed;
 
         private void Awake()
         {
@@ -58,6 +64,8 @@ namespace WhoDunBit.Player
             }
 
             _moveAction.action.Enable();
+            _walkAction.action.Enable();
+            _sprintAction.action.Enable();
             _lookAction.action.Enable();
 
             CursorUtility.SetLocked(true);
@@ -71,6 +79,8 @@ namespace WhoDunBit.Player
             }
 
             _moveAction.action.Disable();
+            _walkAction.action.Disable();
+            _sprintAction.action.Disable();
             _lookAction.action.Disable();
 
             CursorUtility.SetLocked(false);
@@ -139,7 +149,10 @@ namespace WhoDunBit.Player
             // Prevent diagonal movement from being faster
             input = Vector2.ClampMagnitude(input, 1f);
 
-            Vector3 velocity = (transform.right * input.x + transform.forward * input.y) * _walkSpeed;
+            // Can't sprint backwards and run by default
+            float speed = _sprintAction.action.IsPressed() && input.y >= 0f ? _sprintSpeed : _walkAction.action.IsPressed() ? _walkSpeed : _runSpeed;
+
+            Vector3 velocity = (transform.right * input.x + transform.forward * input.y) * speed;
 
             // Sticks the player to the ground while grounded
             if (_controller.isGrounded && _verticalSpeed < 0f)
