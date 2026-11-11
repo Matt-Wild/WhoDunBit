@@ -205,9 +205,10 @@ MonoBehaviour:
   _walkSpeed: 1.9
   _runSpeed: 4
   _sprintSpeed: 6
-  _groundStickSpeed: 2.4
+  _groundStickSpeed: 4
   _gravity: -20
   _jumpStrength: 8
+  _heavyLandingMinSpeed: 10
   _moveAction: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   _walkAction: {fileID: -3009278295278145618, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   _sprintAction: {fileID: -7471211009204490832, guid: 052faaac586de48259a63d0c4782560b, type: 3}
@@ -232,7 +233,7 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 3
   m_Height: 1.6
-  m_Radius: 0.2
+  m_Radius: 0.3
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08

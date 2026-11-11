@@ -16,12 +16,12 @@ namespace WhoDunBit.Player
         private static readonly int RightAxisHash = Animator.StringToHash("RightAxis");
         private static readonly int JumpHash = Animator.StringToHash("Jump");
         private static readonly int MovingHash = Animator.StringToHash("Moving");
+        private static readonly int HeavyLandingHash = Animator.StringToHash("HeavyLanding");
         private static readonly int GroundedHash = Animator.StringToHash("Grounded");
 
         private Vector2 _smoothedHorizontalVelocity;
 
         private bool _waitingForAirborne = false;
-        private bool _isMoving = false;
 
         private void Awake()
         {
@@ -124,21 +124,18 @@ namespace WhoDunBit.Player
                 axes = Vector2.zero;
             }
 
-            // Reset waiting for airborne if airborne
-            bool grounded = Master.Movement.IsGrounded;
-            if (!grounded)
+            MovementState movementState = Master.Movement.MovementState;
+            if (!movementState.Grounded)
             {
                 _waitingForAirborne = false;
             }
 
-            // Update if animator should treat player as moving (this avoids flickering)
-            _isMoving = speed > (_isMoving ? 0.1f : 0.2f);
-
             // Update locomotion parameters
             _animator.SetFloat(RightAxisHash, axes.x);
             _animator.SetFloat(ForwardAxisHash, axes.y);
-            _animator.SetBool(GroundedHash, grounded && !_waitingForAirborne);
-            _animator.SetBool(MovingHash, _isMoving);
+            _animator.SetBool(GroundedHash, movementState.Grounded && !_waitingForAirborne);
+            _animator.SetBool(MovingHash, movementState.Moving);
+            _animator.SetBool(HeavyLandingHash, movementState.HeavyLanding);
         }
 
         private void OnJumped()
@@ -156,7 +153,7 @@ namespace WhoDunBit.Player
 
         private void OnLanded(float impactSpeed)
         {
-
+            _waitingForAirborne = false;
         }
 
         private void CompensateForSkinWidth()

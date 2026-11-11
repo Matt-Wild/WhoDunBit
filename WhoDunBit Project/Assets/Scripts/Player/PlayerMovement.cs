@@ -17,14 +17,15 @@ namespace WhoDunBit.Player
         [SerializeField] private float _mouseSensitivity = 0.1f;
 
         [Header("Horizontal Movement")]
-        [SerializeField] private float _walkSpeed = 2f;
-        [SerializeField] private float _runSpeed = 4f;
-        [SerializeField] private float _sprintSpeed = 6f;
+        [SerializeField, Min(0f)] private float _walkSpeed = 2f;
+        [SerializeField, Min(0f)] private float _runSpeed = 4f;
+        [SerializeField, Min(0f)] private float _sprintSpeed = 6f;
 
         [Header("Vertical Movement")]
         [SerializeField, Min(0f)] private float _groundStickSpeed = 2f;
         [SerializeField] private float _gravity = -20f;
-        [SerializeField] private float _jumpStrength = 4f;
+        [SerializeField, Min(0f)] private float _jumpStrength = 4f;
+        [SerializeField, Min(0f)] private float _heavyLandingMinSpeed = 10f;
 
         [Header("Input")]
         [SerializeField] private InputActionReference _moveAction;
@@ -44,15 +45,16 @@ namespace WhoDunBit.Player
         public event System.Action<float> Landed;
 
         // Variables that need to be synced across clients
-        private NetworkVariable<bool> _networkGrounded = new(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        private NetworkVariable<MovementState> _networkMovement = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
+        public MovementState MovementState => _networkMovement.Value;
         public Vector3 WorldVelocity => Master.IsLocallyControlled ? _controller.velocity : _worldVelocity;
         public Vector3 LocalVelocity => transform.InverseTransformDirection(WorldVelocity);
         public float WalkSpeed => _walkSpeed;
         public float RunSpeed => _runSpeed;
         public float SprintSpeed => _sprintSpeed;
         public float VerticalSpeed => Master.IsLocallyControlled ? _verticalSpeed : _worldVelocity.y;
-        public bool IsGrounded => Master.IsLocallyControlled ? _controller.isGrounded : _networkGrounded.Value;
+        public bool IsGrounded => Master.IsLocallyControlled ? _controller.isGrounded : _networkMovement.Value.Grounded;
 
         private void Awake()
         {
@@ -185,7 +187,12 @@ namespace WhoDunBit.Player
 
             _controller.Move(velocity * Time.deltaTime);
 
-            _networkGrounded.Value = _controller.isGrounded;
+            MovementState movementState = _networkMovement.Value;
+            movementState.Grounded = _controller.isGrounded;
+
+            Vector3 velocityAfterMove = _controller.velocity;
+            float horizontalSpeed = new Vector2(velocityAfterMove.x, velocityAfterMove.z).magnitude;
+            movementState.Moving = horizontalSpeed > (movementState.Moving ? 0.1f : 0.2f);  // Velocity difference avoids flickery movement state
 
             // Fire movement events (these should be sent to other clients too)
             if (jumped)
@@ -194,8 +201,12 @@ namespace WhoDunBit.Player
             }
             else if (!wasGrounded && IsGrounded)
             {
+                movementState.HeavyLanding = impactSpeed >= _heavyLandingMinSpeed;
+
                 NotifyLandedRpc(impactSpeed);
             }
+
+            _networkMovement.Value = movementState;
         }
 
         [Rpc(SendTo.Everyone, InvokePermission = RpcInvokePermission.Owner)]
@@ -228,6 +239,21 @@ namespace WhoDunBit.Player
                 _jumpAction.action.Disable();
                 _lookAction.action.Disable();
             }
+        }
+    }
+
+    public struct MovementState : INetworkSerializable
+    {
+        public bool Grounded;
+        public bool HeavyLanding;
+        public bool Moving;
+
+        public void NetworkSerialize<T>(BufferSerializer<T> serializer)
+        where T : IReaderWriter
+        {
+            serializer.SerializeValue(ref Grounded);
+            serializer.SerializeValue(ref HeavyLanding);
+            serializer.SerializeValue(ref Moving);
         }
     }
 }
