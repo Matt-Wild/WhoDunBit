@@ -17,6 +17,10 @@ namespace WhoDunBit.Player
         [SerializeField] private float _mouseSensitivity = 0.1f;
 
         [Header("Horizontal Movement")]
+        [SerializeField, Range(0f, 1f)] private float _groundControl = 1f;
+        [SerializeField, Range(0f, 1f)] private float _airControl = 0.6f;
+        [SerializeField, Range(0f, 1f)] private float _airDrag = 0.1f;
+        [SerializeField, Min(0f)] private float _acceleration = 1f;
         [SerializeField, Min(0f)] private float _walkSpeed = 2f;
         [SerializeField, Min(0f)] private float _runSpeed = 4f;
         [SerializeField, Min(0f)] private float _sprintSpeed = 6f;
@@ -33,9 +37,11 @@ namespace WhoDunBit.Player
         [SerializeField] private InputActionReference _sprintAction;
         [SerializeField] private InputActionReference _jumpAction;
         [SerializeField] private InputActionReference _lookAction;
+        [SerializeField, Min(0f)] private float _moveInputDeadzone = 0.05f;
 
         private Vector3 _previousPosition;
         private Vector3 _worldVelocity;
+        private Vector3 _horizontalVelocity;
         private float _verticalSpeed;
         private float _cameraPitch;
 
@@ -70,6 +76,7 @@ namespace WhoDunBit.Player
         {
             _previousPosition = transform.position;
             _worldVelocity = Vector3.zero;
+            _horizontalVelocity = Vector3.zero;
 
             if (!IsOwner)
             {
@@ -155,18 +162,37 @@ namespace WhoDunBit.Player
         {
             // Prevent diagonal movement from being faster
             input = Vector2.ClampMagnitude(input, 1f);
+            bool hasMoveInput = input.sqrMagnitude > _moveInputDeadzone * _moveInputDeadzone;
+            if (!hasMoveInput)
+            {
+                input = Vector2.zero;
+            }
 
             // Can't sprint backwards and run by default
             float speed = _sprintAction.action.IsPressed() && input.y >= 0f ? _sprintSpeed : _walkAction.action.IsPressed() ? _walkSpeed : _runSpeed;
 
-            Vector3 velocity = (transform.right * input.x + transform.forward * input.y) * speed;
+            bool wasGrounded = IsGrounded;
+            float control = wasGrounded ? _groundControl : hasMoveInput ? _airControl : _airDrag;
+            float acceleration = _acceleration * speed * control;
+
+            Vector3 currentVelocity = _horizontalVelocity;
+
+            // Calculate target velocity
+            Vector3 targetVelocity = (transform.right * input.x + transform.forward * input.y) * speed;
+            if (hasMoveInput && !wasGrounded)
+            {
+                Vector3 direction = targetVelocity.normalized;
+                float speedAlongInput = Vector3.Dot(currentVelocity, direction);
+                targetVelocity = direction * Mathf.Max(targetVelocity.magnitude, speedAlongInput);
+            }
+
+            // Control is the fraction of the difference closed in _controlInterval seconds
+            Vector3 velocity = Vector3.MoveTowards(currentVelocity, targetVelocity, acceleration * Time.deltaTime);
 
             // Jumping and landing logic
-            bool wasGrounded = IsGrounded;
             bool jumped = false;
             if (wasGrounded && _verticalSpeed < 0f)
             {
-                // Jump behaviour
                 if (_jumpAction.action.WasPressedThisFrame())
                 {
                     _verticalSpeed = _jumpStrength;
@@ -185,14 +211,25 @@ namespace WhoDunBit.Player
 
             float impactSpeed = Mathf.Max(0f, -_verticalSpeed);
 
-            _controller.Move(velocity * Time.deltaTime);
+            CollisionFlags collisions = _controller.Move(velocity * Time.deltaTime);
+            if ((collisions & CollisionFlags.Above) != 0 && _verticalSpeed > 0f)
+            {
+                _verticalSpeed = 0f;
+            }
+
+            Vector3 requestedHorizontal = new(velocity.x, 0f, velocity.z);
+            Vector3 actualHorizontal = _controller.velocity;
+            actualHorizontal.y = 0f;
+
+            // Collisions may remove momentum, but cannot add speed
+            _horizontalVelocity = Vector3.ClampMagnitude(actualHorizontal, requestedHorizontal.magnitude);
 
             MovementState movementState = _networkMovement.Value;
             movementState.Grounded = _controller.isGrounded;
 
             Vector3 velocityAfterMove = _controller.velocity;
             float horizontalSpeed = new Vector2(velocityAfterMove.x, velocityAfterMove.z).magnitude;
-            movementState.Moving = horizontalSpeed > (movementState.Moving ? 0.1f : 0.2f);  // Velocity difference avoids flickery movement state
+            movementState.Moving = hasMoveInput && horizontalSpeed > (movementState.Moving ? 0.5f : 0.75f);  // Velocity difference avoids flickery movement state
 
             // Fire movement events (these should be sent to other clients too)
             if (jumped)

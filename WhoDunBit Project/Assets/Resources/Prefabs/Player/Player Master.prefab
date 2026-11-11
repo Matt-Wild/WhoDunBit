@@ -202,9 +202,13 @@ MonoBehaviour:
   _controller: {fileID: 8799051035139834059}
   _cameraTransform: {fileID: 2278784544088935312}
   _mouseSensitivity: 0.1
+  _groundControl: 1
+  _airControl: 0.4
+  _airDrag: 0.04
+  _acceleration: 10
   _walkSpeed: 1.9
   _runSpeed: 4
-  _sprintSpeed: 6
+  _sprintSpeed: 5.6
   _groundStickSpeed: 4
   _gravity: -20
   _jumpStrength: 8
@@ -214,6 +218,7 @@ MonoBehaviour:
   _sprintAction: {fileID: -7471211009204490832, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   _jumpAction: {fileID: -2099379676528639254, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   _lookAction: {fileID: -5630151704836100654, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  _moveInputDeadzone: 0.05
 --- !u!143 &8799051035139834059
 CharacterController:
   m_ObjectHideFlags: 0
@@ -237,7 +242,7 @@ CharacterController:
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
+  m_MinMoveDistance: 0
   m_Center: {x: 0, y: 0.8, z: 0}
 --- !u!114 &690755978988381474
 MonoBehaviour:
