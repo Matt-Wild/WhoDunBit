@@ -11,6 +11,9 @@ namespace WhoDunBit.Player
         [Header("Positioning")]
         [SerializeField] private bool _compensateForSkinWidth = true;
 
+        [Header("Falling")]
+        [SerializeField, Min(0f)] private float _fallingDelay = 0.1f;
+
         // Animator parameter hashes
         private static readonly int ForwardAxisHash = Animator.StringToHash("ForwardAxis");
         private static readonly int RightAxisHash = Animator.StringToHash("RightAxis");
@@ -20,6 +23,8 @@ namespace WhoDunBit.Player
         private static readonly int GroundedHash = Animator.StringToHash("Grounded");
 
         private Vector2 _smoothedHorizontalVelocity;
+
+        private float _lastGrounded;
 
         private bool _waitingForAirborne = false;
 
@@ -125,15 +130,23 @@ namespace WhoDunBit.Player
             }
 
             MovementState movementState = Master.Movement.MovementState;
-            if (!movementState.Grounded)
+            if (movementState.Grounded)
+            {
+                _lastGrounded = Time.time;
+            }
+            else
             {
                 _waitingForAirborne = false;
             }
 
+            // Determine if animation controller should treat player as grounded
+            bool keepGrounded = _animator.GetBool(GroundedHash) && Time.time - _lastGrounded < _fallingDelay;
+            bool grounded = !_waitingForAirborne && (movementState.Grounded || keepGrounded);
+
             // Update locomotion parameters
             _animator.SetFloat(RightAxisHash, axes.x);
             _animator.SetFloat(ForwardAxisHash, axes.y);
-            _animator.SetBool(GroundedHash, movementState.Grounded && !_waitingForAirborne);
+            _animator.SetBool(GroundedHash, grounded);
             _animator.SetBool(MovingHash, movementState.Moving);
             _animator.SetBool(HeavyLandingHash, movementState.HeavyLanding);
         }

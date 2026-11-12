@@ -52,6 +52,8 @@ namespace WhoDunBit.Player
 
         // Variables that need to be synced across clients
         private NetworkVariable<MovementState> _networkMovement = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        private Transform _supportSurface;
+        private Vector3 _supportPoint;
 
         public MovementState MovementState => _networkMovement.Value;
         public Vector3 WorldVelocity => Master.IsLocallyControlled ? _controller.velocity : _worldVelocity;
@@ -244,6 +246,20 @@ namespace WhoDunBit.Player
             }
 
             _networkMovement.Value = movementState;
+        }
+
+        private void OnControllerColliderHit(ControllerColliderHit hit)
+        {
+            float angle = Vector3.Angle(hit.normal, Vector3.up);
+            bool walkable = angle <= _controller.slopeLimit;
+
+            if (walkable)
+            {
+                _supportSurface = hit.transform;
+                _supportPoint = hit.transform.InverseTransformPoint(hit.point);
+            }
+
+            Debug.DrawRay(hit.point, hit.normal * 0.4f, walkable ? Color.green : Color.red, 0.1f);
         }
 
         [Rpc(SendTo.Everyone, InvokePermission = RpcInvokePermission.Owner)]

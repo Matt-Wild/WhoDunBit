@@ -47,6 +47,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2918f6b050c5b54ba239cc49ebe18b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WhoDunBit.Player.PlayerCamera
+  _smoothTime: 0.08
+  _maxEyeLag: 0.04
 --- !u!20 &2716823263882120199
 Camera:
   m_ObjectHideFlags: 0
@@ -211,8 +213,8 @@ MonoBehaviour:
   _sprintSpeed: 5.6
   _groundStickSpeed: 4
   _gravity: -20
-  _jumpStrength: 8
-  _heavyLandingMinSpeed: 10
+  _jumpStrength: 7
+  _heavyLandingMinSpeed: 8
   _moveAction: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   _walkAction: {fileID: -3009278295278145618, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   _sprintAction: {fileID: -7471211009204490832, guid: 052faaac586de48259a63d0c4782560b, type: 3}
@@ -238,7 +240,7 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 3
   m_Height: 1.6
-  m_Radius: 0.3
+  m_Radius: 0.32
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
@@ -337,6 +339,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WhoDunBit.PlayerAnimation
   _animator: {fileID: 2161976552626730035}
   _compensateForSkinWidth: 1
+  _fallingDelay: 0.1
 --- !u!1 &8257166974850152127
 GameObject:
   m_ObjectHideFlags: 0
