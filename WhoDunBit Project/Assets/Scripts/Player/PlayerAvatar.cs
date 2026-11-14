@@ -30,13 +30,10 @@ namespace WhoDunBit.Player
                 Debug.LogWarning("Cannot update head renderer - head renderer not found!", this);
             }
 
-            // Locally controlled body skinned mesh renderers should always update
-            if (Master.IsLocallyControlled)
+            // Avoid player skinned mesh renderers disappearing at the edge of the camera
+            foreach (SkinnedMeshRenderer renderer in GetComponentsInChildren<SkinnedMeshRenderer>())
             {
-                foreach (SkinnedMeshRenderer renderer in GetComponentsInChildren<SkinnedMeshRenderer>())
-                {
-                    renderer.updateWhenOffscreen = true;
-                }
+                renderer.updateWhenOffscreen = true;
             }
         }
     }

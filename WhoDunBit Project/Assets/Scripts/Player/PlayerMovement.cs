@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -42,9 +43,13 @@ namespace WhoDunBit.Player
         [SerializeField] private InputActionReference _lookAction;
         [SerializeField, Min(0f)] private float _moveInputDeadzone = 0.05f;
 
+        [Header("Network Interpolation")]
+        [SerializeField, Min(0f)] private float _interpolationDelay = 0.1f;
+
         private Vector3 _previousPosition;
         private Vector3 _worldVelocity;
         private Vector3 _horizontalVelocity;
+        private Vector3 _remoteLocalVelocity;
         private float _verticalSpeed;
         private float _cameraPitch;
 
@@ -53,18 +58,15 @@ namespace WhoDunBit.Player
         public event System.Action Jumped;
         public event System.Action<float> Landed;
 
-        // Variables that need to be synced across clients
-        private NetworkVariable<MovementState> _networkMovement = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-        private Transform _supportSurface;
-        private Vector3 _supportPoint;
-        private Vector3 _supportVelocity;
-        private Vector3 _previousSupportPosition;
-        private Quaternion _previousSupportRotation;
-        private bool _needsSupportVelocityConversion;
+        // Movement state should be synced across clients
+        private NetworkVariable<MovementState> _networkMovement = new(new MovementState { SampleTime = -1d }, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        private readonly List<MovementState> _receivedMovementStates = new();
+
+        private SupportInfo _supportInfo = new();
 
         public MovementState MovementState => _networkMovement.Value;
         public Vector3 WorldVelocity => Master.IsLocallyControlled ? _controller.velocity : _worldVelocity;
-        public Vector3 LocalVelocity => transform.InverseTransformDirection(WorldVelocity);
+        public Vector3 LocalVelocity => Master.IsLocallyControlled ? transform.InverseTransformDirection(_controller.velocity) : _remoteLocalVelocity;
         public float WalkSpeed => _walkSpeed;
         public float RunSpeed => _runSpeed;
         public float SprintSpeed => _sprintSpeed;
@@ -86,10 +88,17 @@ namespace WhoDunBit.Player
             _previousPosition = transform.position;
             _worldVelocity = Vector3.zero;
             _horizontalVelocity = Vector3.zero;
-            _needsSupportVelocityConversion = false;
+            _remoteLocalVelocity = Vector3.zero;
+            _supportInfo = new();
+
+            _receivedMovementStates.Clear();
 
             if (!IsOwner)
             {
+                _networkMovement.OnValueChanged += OnMovementStateChanged;
+
+                // Include the state received during spawning
+                OnMovementStateChanged(default, _networkMovement.Value);
                 return;
             }
 
@@ -100,6 +109,9 @@ namespace WhoDunBit.Player
 
         public override void OnNetworkDespawn()
         {
+            _networkMovement.OnValueChanged -= OnMovementStateChanged;
+            _receivedMovementStates.Clear();
+
             if (!IsOwner)
             {
                 return;
@@ -131,6 +143,10 @@ namespace WhoDunBit.Player
                 // Movement should happen even if the cursor is unlocked
                 Move(movementInput);
             }
+            else
+            {
+                UpdateRemoteMovement();
+            }
 
             UpdatePositionAndVelocity();
         }
@@ -140,6 +156,46 @@ namespace WhoDunBit.Player
             Vector3 currentPosition = transform.position;
             _worldVelocity = Time.deltaTime > 0f ? (currentPosition - _previousPosition) / Time.deltaTime : Vector3.zero;
             _previousPosition = currentPosition;
+        }
+
+        private void UpdateRemoteMovement()
+        {
+            if (!TryGetInterpolatedMovement(out MovementState movementState))
+            {
+                return;
+            }
+
+            Vector3 position = movementState.Position;
+            Quaternion rotation = movementState.Rotation;
+
+            if (movementState.HasNetworkedSupport)
+            {
+                // Wait until the referenced support is available locally
+                if (!movementState.SupportReference.TryGet(out NetworkObject supportObject, NetworkManager))
+                {
+                    return;
+                }
+
+                Transform support = supportObject.transform;
+                position = support.TransformPoint(position);
+                rotation = support.rotation * rotation;
+            }
+
+            // Keep the player upright as the support tilts
+            Vector3 forward = Vector3.ProjectOnPlane(rotation * Vector3.forward, Vector3.up);
+
+            if (forward.sqrMagnitude > 0.0001f)
+            {
+                rotation = Quaternion.LookRotation(forward, Vector3.up);
+            }
+            else
+            {
+                rotation = transform.rotation;
+            }
+
+            transform.SetPositionAndRotation(position, rotation);
+
+            _remoteLocalVelocity = movementState.LocalVelocity;
         }
 
         private void EnsureCharacterController()
@@ -159,7 +215,7 @@ namespace WhoDunBit.Player
 
         private bool IsSupportNearby()
         {
-            if (!_supportSurface)
+            if (!_supportInfo.Surface)
             {
                 return false;
             }
@@ -169,7 +225,7 @@ namespace WhoDunBit.Player
 
             foreach (Collider collider in Physics.OverlapSphere(feet, radius, ~_ignoredSupportLayers.value, QueryTriggerInteraction.Ignore))
             {
-                if (collider.transform == _supportSurface)
+                if (collider.transform == _supportInfo.Surface)
                 {
                     return true;
                 }
@@ -191,6 +247,9 @@ namespace WhoDunBit.Player
 
         private void Move(Vector2 input)
         {
+            // Ensure colliders etc are synced with their transforms (helps with high speed moving objects)
+            Physics.SyncTransforms();
+
             // Prevent diagonal movement from being faster
             input = Vector2.ClampMagnitude(input, 1f);
             bool hasMoveInput = input.sqrMagnitude > _moveInputDeadzone * _moveInputDeadzone;
@@ -203,23 +262,23 @@ namespace WhoDunBit.Player
             float speed = _sprintAction.action.IsPressed() && input.y >= 0f ? _sprintSpeed : _walkAction.action.IsPressed() ? _walkSpeed : _runSpeed;
 
             bool wasGrounded = IsGrounded;
-            bool wasSupported = wasGrounded && _supportSurface;
+            bool wasSupported = wasGrounded && _supportInfo.Surface;
             float control = wasGrounded ? _groundControl : hasMoveInput ? _airControl : _airDrag;
             float acceleration = _acceleration * speed * control;
-            Transform startingSupport = wasSupported ? _supportSurface : null;
+            Transform startingSupport = wasSupported ? _supportInfo.Surface : null;
 
-            if (wasGrounded && _supportSurface)
+            if (wasGrounded && _supportInfo.Surface)
             {
                 // Move with support surface
-                Quaternion rotationDelta = _supportSurface.rotation * Quaternion.Inverse(_previousSupportRotation);
+                Quaternion rotationDelta = _supportInfo.Surface.rotation * Quaternion.Inverse(_supportInfo.PreviousRotation);
                 Vector3 displacement = GetSupportDisplacement();
-                _supportVelocity = Time.deltaTime > 0f ? displacement / Time.deltaTime : Vector3.zero;
+                _supportInfo.Velocity = Time.deltaTime > 0f ? displacement / Time.deltaTime : Vector3.zero;
 
                 // Account for inherited velocity upon landing on a new support surface
-                if (_needsSupportVelocityConversion)
+                if (_supportInfo.NeedsVelocityConversion)
                 {
-                    _horizontalVelocity -= new Vector3(_supportVelocity.x, 0f, _supportVelocity.z);
-                    _needsSupportVelocityConversion = false;
+                    _horizontalVelocity -= new Vector3(_supportInfo.Velocity.x, 0f, _supportInfo.Velocity.z);
+                    _supportInfo.NeedsVelocityConversion = false;
                 }
 
                 ApplySupportRotation(rotationDelta);
@@ -269,27 +328,29 @@ namespace WhoDunBit.Player
             }
 
             // Clear support surface if it's controller isn't grounded or support surface is too far away
-            if (_supportSurface && (jumped || !_controller.isGrounded || !IsSupportNearby()))
+            if (_supportInfo.Surface && (jumped || !_controller.isGrounded || !IsSupportNearby()))
             {
-                _supportSurface = null;
-                _supportPoint = Vector3.zero;
-                _previousSupportPosition = Vector3.zero;
-                _previousSupportRotation = Quaternion.identity;
+                _supportInfo.Surface = null;
+                _supportInfo.NetworkObject = null;
+
+                _supportInfo.Point = Vector3.zero;
+                _supportInfo.PreviousPosition = Vector3.zero;
+                _supportInfo.PreviousRotation = Quaternion.identity;
             }
 
-            if (_supportSurface)
+            if (_supportInfo.Surface)
             {
-                _previousSupportPosition = _supportSurface.position;
-                _previousSupportRotation = _supportSurface.rotation;
+                _supportInfo.PreviousPosition = _supportInfo.Surface.position;
+                _supportInfo.PreviousRotation = _supportInfo.Surface.rotation;
             }
 
             // If leaving a support surface, account for it's velocity
-            bool supportChanged = startingSupport != _supportSurface;
-            Vector3 outgoingSupportVelocity = wasSupported ? new Vector3(_supportVelocity.x, 0f, _supportVelocity.z) : Vector3.zero;
+            bool supportChanged = startingSupport != _supportInfo.Surface;
+            Vector3 outgoingSupportVelocity = wasSupported ? new Vector3(_supportInfo.Velocity.x, 0f, _supportInfo.Velocity.z) : Vector3.zero;
             Vector3 departureVelocity = supportChanged ? outgoingSupportVelocity : Vector3.zero;
             if (supportChanged)
             {
-                _needsSupportVelocityConversion = _supportSurface != null;
+                _supportInfo.NeedsVelocityConversion = _supportInfo.Surface != null;
             }
 
             Vector3 requestedHorizontal = new(velocity.x, 0f, velocity.z);
@@ -319,6 +380,35 @@ namespace WhoDunBit.Player
                 NotifyLandedRpc(impactSpeed);
             }
 
+            // Record network identity after support assignment and clearing
+            _supportInfo.IsNetworked = _supportInfo.Surface && _supportInfo.NetworkObject && _supportInfo.NetworkObject.IsSpawned;
+            _supportInfo.Reference = _supportInfo.IsNetworked ? new NetworkObjectReference(_supportInfo.NetworkObject) : default;
+
+            // Record player pose relative to the current networked support
+            if (_supportInfo.IsNetworked)
+            {
+                _supportInfo.RelativePosition = _supportInfo.Surface.InverseTransformPoint(transform.position);
+                _supportInfo.RelativeRotation = Quaternion.Inverse(_supportInfo.Surface.rotation) * transform.rotation;
+            }
+            else
+            {
+                _supportInfo.RelativePosition = Vector3.zero;
+                _supportInfo.RelativeRotation = Quaternion.identity;
+            }
+
+            // Record player pose and its coordinate space together
+            movementState.HasNetworkedSupport = _supportInfo.IsNetworked;
+            movementState.SupportReference = _supportInfo.Reference;
+            movementState.Position = _supportInfo.IsNetworked ? _supportInfo.RelativePosition : transform.position;
+            movementState.Rotation = _supportInfo.IsNetworked ? _supportInfo.RelativeRotation : transform.rotation;
+
+            // Record movement velocity relative to player facing
+            movementState.LocalVelocity = transform.InverseTransformDirection(_controller.velocity);
+
+            // Record sample time for interpolation
+            movementState.SampleTime = NetworkManager.ServerTime.Time;
+
+            // Assign new movement state (this gets synced)
             _networkMovement.Value = movementState;
         }
 
@@ -334,17 +424,42 @@ namespace WhoDunBit.Player
 
             if (walkable)
             {
-                if (_supportSurface != hit.transform)
+                if (_supportInfo.Surface != hit.transform)
                 {
-                    _supportSurface = hit.transform;
-                    _previousSupportPosition = hit.transform.position;
-                    _previousSupportRotation = hit.transform.rotation;
+                    _supportInfo.Surface = hit.transform;
+                    _supportInfo.Surface.TryGetComponent(out _supportInfo.NetworkObject);
+
+                    _supportInfo.PreviousPosition = hit.transform.position;
+                    _supportInfo.PreviousRotation = hit.transform.rotation;
                 }
                 
-                _supportPoint = hit.transform.InverseTransformPoint(hit.point);
+                _supportInfo.Point = hit.transform.InverseTransformPoint(hit.point);
             }
 
             Debug.DrawRay(hit.point, hit.normal * 0.4f, walkable ? Color.green : Color.red, 0.1f);
+        }
+
+        private void OnMovementStateChanged(MovementState previous, MovementState current)
+        {
+            // Ignore state that hasn't had a pose captured yet
+            if (current.SampleTime < 0d)
+            {
+                return;
+            }
+
+            // Ignore duplicate or older samples
+            if (_receivedMovementStates.Count > 0 && current.SampleTime <= _receivedMovementStates[^1].SampleTime)
+            {
+                return;
+            }
+
+            _receivedMovementStates.Add(current);
+
+            // Keep a short history for interpolation
+            if (_receivedMovementStates.Count > 32)
+            {
+                _receivedMovementStates.RemoveAt(0);
+            }
         }
 
         [Rpc(SendTo.Everyone, InvokePermission = RpcInvokePermission.Owner)]
@@ -367,9 +482,10 @@ namespace WhoDunBit.Player
             {
                 return;
             }
-                
 
-            float yaw = Vector3.SignedAngle(transform.forward, forward, Vector3.up);
+
+            Vector3 currentForward = transform.forward;
+            float yaw = Mathf.Atan2(Vector3.Cross(currentForward, forward).y, Vector3.Dot(currentForward, forward)) * Mathf.Rad2Deg;
 
             Quaternion yawRotation = Quaternion.AngleAxis(yaw, Vector3.up);
 
@@ -377,17 +493,67 @@ namespace WhoDunBit.Player
             _horizontalVelocity = yawRotation * _horizontalVelocity;
         }
 
+        private bool TryGetInterpolatedMovement(out MovementState movementState)
+        {
+            movementState = default;
+
+            if (_receivedMovementStates.Count == 0)
+            {
+                return false;
+            }
+
+            double renderTime = NetworkManager.ServerTime.Time - _interpolationDelay;
+            movementState = _receivedMovementStates[0];
+
+            // Hold the first pose until render time reaches it
+            if (renderTime <= movementState.SampleTime)
+            {
+                return true;
+            }
+
+            for (int i = 1; i < _receivedMovementStates.Count; i++)
+            {
+                MovementState next = _receivedMovementStates[i];
+
+                if (next.SampleTime <= renderTime)
+                {
+                    movementState = next;
+                    continue;
+                }
+
+                // Positions can only be blended within the same coordinate space
+                bool sameSpace = movementState.HasNetworkedSupport == next.HasNetworkedSupport && (!movementState.HasNetworkedSupport || movementState.SupportReference.Equals(next.SupportReference));
+
+                if (sameSpace)
+                {
+                    float blend = (float)((renderTime - movementState.SampleTime) / (next.SampleTime - movementState.SampleTime));
+
+                    movementState.Position = Vector3.Lerp(movementState.Position, next.Position, blend);
+                    movementState.Rotation = Quaternion.Slerp(movementState.Rotation, next.Rotation, blend);
+
+                    movementState.LocalVelocity = Vector3.Lerp(movementState.LocalVelocity, next.LocalVelocity, blend);
+
+                    movementState.SampleTime = renderTime;
+                }
+
+                return true;
+            }
+
+            // Hold the latest pose if no newer sample is available
+            return true;
+        }
+
         private Vector3 GetSupportDisplacement()
         {
-            if (!_supportSurface)
+            if (!_supportInfo.Surface)
             {
                 return Vector3.zero;
             }
 
-            Quaternion rotationDelta = _supportSurface.rotation * Quaternion.Inverse(_previousSupportRotation);
+            Quaternion rotationDelta = _supportInfo.Surface.rotation * Quaternion.Inverse(_supportInfo.PreviousRotation);
 
-            Vector3 previousOffset = transform.position - _previousSupportPosition;
-            Vector3 carriedPosition = _supportSurface.position + rotationDelta * previousOffset;
+            Vector3 previousOffset = transform.position - _supportInfo.PreviousPosition;
+            Vector3 carriedPosition = _supportInfo.Surface.position + rotationDelta * previousOffset;
 
             return carriedPosition - transform.position;
         }
@@ -413,11 +579,37 @@ namespace WhoDunBit.Player
         }
     }
 
+    public class SupportInfo
+    {
+        public Transform Surface;
+        public NetworkObject NetworkObject;
+        public NetworkObjectReference Reference;
+        public Quaternion RelativeRotation = Quaternion.identity;
+        public Quaternion PreviousRotation = Quaternion.identity;
+        public Vector3 Point;
+        public Vector3 RelativePosition;
+        public Vector3 Velocity;
+        public Vector3 PreviousPosition;
+        public bool NeedsVelocityConversion;
+        public bool IsNetworked;
+    }
+
     public struct MovementState : INetworkSerializable
     {
         public bool Grounded;
         public bool HeavyLanding;
         public bool Moving;
+
+        // Position and rotation based information
+        public bool HasNetworkedSupport;
+        public NetworkObjectReference SupportReference;
+        public Vector3 Position;
+        public Quaternion Rotation;
+
+        // Movement velocity relative to player facing
+        public Vector3 LocalVelocity;
+
+        public double SampleTime;
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer)
         where T : IReaderWriter
@@ -425,6 +617,15 @@ namespace WhoDunBit.Player
             serializer.SerializeValue(ref Grounded);
             serializer.SerializeValue(ref HeavyLanding);
             serializer.SerializeValue(ref Moving);
+
+            serializer.SerializeValue(ref HasNetworkedSupport);
+            serializer.SerializeValue(ref SupportReference);
+            serializer.SerializeValue(ref Position);
+            serializer.SerializeValue(ref Rotation);
+
+            serializer.SerializeValue(ref LocalVelocity);
+
+            serializer.SerializeValue(ref SampleTime);
         }
     }
 }
