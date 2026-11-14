@@ -5,7 +5,7 @@ using WhoDunBit.Utilities;
 
 namespace WhoDunBit.Player
 {
-    [DefaultExecutionOrder(-128)]
+    [DefaultExecutionOrder(64)]
     [RequireComponent(typeof(CharacterController))]
     public class PlayerMovement : PlayerNetworkBehaviour
     {
@@ -31,6 +31,9 @@ namespace WhoDunBit.Player
         [SerializeField, Min(0f)] private float _jumpStrength = 4f;
         [SerializeField, Min(0f)] private float _heavyLandingMinSpeed = 10f;
 
+        [Header("Support Surface Detection")]
+        [SerializeField] private LayerMask _ignoredSupportLayers;
+
         [Header("Input")]
         [SerializeField] private InputActionReference _moveAction;
         [SerializeField] private InputActionReference _walkAction;
@@ -54,6 +57,10 @@ namespace WhoDunBit.Player
         private NetworkVariable<MovementState> _networkMovement = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         private Transform _supportSurface;
         private Vector3 _supportPoint;
+        private Vector3 _supportVelocity;
+        private Vector3 _previousSupportPosition;
+        private Quaternion _previousSupportRotation;
+        private bool _needsSupportVelocityConversion;
 
         public MovementState MovementState => _networkMovement.Value;
         public Vector3 WorldVelocity => Master.IsLocallyControlled ? _controller.velocity : _worldVelocity;
@@ -79,6 +86,7 @@ namespace WhoDunBit.Player
             _previousPosition = transform.position;
             _worldVelocity = Vector3.zero;
             _horizontalVelocity = Vector3.zero;
+            _needsSupportVelocityConversion = false;
 
             if (!IsOwner)
             {
@@ -149,6 +157,27 @@ namespace WhoDunBit.Player
             }
         }
 
+        private bool IsSupportNearby()
+        {
+            if (!_supportSurface)
+            {
+                return false;
+            }
+
+            Vector3 feet = _controller.transform.TransformPoint(_controller.center - Vector3.up * (_controller.height * 0.5f));
+            float radius = _controller.radius + _controller.skinWidth;
+
+            foreach (Collider collider in Physics.OverlapSphere(feet, radius, ~_ignoredSupportLayers.value, QueryTriggerInteraction.Ignore))
+            {
+                if (collider.transform == _supportSurface)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         private void Look(Vector2 mouseDelta)
         {
             float yaw = mouseDelta.x * _mouseSensitivity;
@@ -174,8 +203,28 @@ namespace WhoDunBit.Player
             float speed = _sprintAction.action.IsPressed() && input.y >= 0f ? _sprintSpeed : _walkAction.action.IsPressed() ? _walkSpeed : _runSpeed;
 
             bool wasGrounded = IsGrounded;
+            bool wasSupported = wasGrounded && _supportSurface;
             float control = wasGrounded ? _groundControl : hasMoveInput ? _airControl : _airDrag;
             float acceleration = _acceleration * speed * control;
+            Transform startingSupport = wasSupported ? _supportSurface : null;
+
+            if (wasGrounded && _supportSurface)
+            {
+                // Move with support surface
+                Quaternion rotationDelta = _supportSurface.rotation * Quaternion.Inverse(_previousSupportRotation);
+                Vector3 displacement = GetSupportDisplacement();
+                _supportVelocity = Time.deltaTime > 0f ? displacement / Time.deltaTime : Vector3.zero;
+
+                // Account for inherited velocity upon landing on a new support surface
+                if (_needsSupportVelocityConversion)
+                {
+                    _horizontalVelocity -= new Vector3(_supportVelocity.x, 0f, _supportVelocity.z);
+                    _needsSupportVelocityConversion = false;
+                }
+
+                ApplySupportRotation(rotationDelta);
+                _controller.Move(displacement);
+            }
 
             Vector3 currentVelocity = _horizontalVelocity;
 
@@ -219,12 +268,37 @@ namespace WhoDunBit.Player
                 _verticalSpeed = 0f;
             }
 
+            // Clear support surface if it's controller isn't grounded or support surface is too far away
+            if (_supportSurface && (jumped || !_controller.isGrounded || !IsSupportNearby()))
+            {
+                _supportSurface = null;
+                _supportPoint = Vector3.zero;
+                _previousSupportPosition = Vector3.zero;
+                _previousSupportRotation = Quaternion.identity;
+            }
+
+            if (_supportSurface)
+            {
+                _previousSupportPosition = _supportSurface.position;
+                _previousSupportRotation = _supportSurface.rotation;
+            }
+
+            // If leaving a support surface, account for it's velocity
+            bool supportChanged = startingSupport != _supportSurface;
+            Vector3 outgoingSupportVelocity = wasSupported ? new Vector3(_supportVelocity.x, 0f, _supportVelocity.z) : Vector3.zero;
+            Vector3 departureVelocity = supportChanged ? outgoingSupportVelocity : Vector3.zero;
+            if (supportChanged)
+            {
+                _needsSupportVelocityConversion = _supportSurface != null;
+            }
+
             Vector3 requestedHorizontal = new(velocity.x, 0f, velocity.z);
             Vector3 actualHorizontal = _controller.velocity;
             actualHorizontal.y = 0f;
 
             // Collisions may remove momentum, but cannot add speed
             _horizontalVelocity = Vector3.ClampMagnitude(actualHorizontal, requestedHorizontal.magnitude);
+            _horizontalVelocity += departureVelocity;   // Velocity maintained after leaving a support surface
 
             MovementState movementState = _networkMovement.Value;
             movementState.Grounded = _controller.isGrounded;
@@ -250,12 +324,23 @@ namespace WhoDunBit.Player
 
         private void OnControllerColliderHit(ControllerColliderHit hit)
         {
+            if ((_ignoredSupportLayers.value & (1 << hit.collider.gameObject.layer)) != 0)
+            {
+                return;
+            }
+
             float angle = Vector3.Angle(hit.normal, Vector3.up);
             bool walkable = angle <= _controller.slopeLimit;
 
             if (walkable)
             {
-                _supportSurface = hit.transform;
+                if (_supportSurface != hit.transform)
+                {
+                    _supportSurface = hit.transform;
+                    _previousSupportPosition = hit.transform.position;
+                    _previousSupportRotation = hit.transform.rotation;
+                }
+                
                 _supportPoint = hit.transform.InverseTransformPoint(hit.point);
             }
 
@@ -272,6 +357,39 @@ namespace WhoDunBit.Player
         private void NotifyLandedRpc(float impactSpeed)
         {
             Landed?.Invoke(impactSpeed);
+        }
+
+        private void ApplySupportRotation(Quaternion rotationDelta)
+        {
+            Vector3 forward = Vector3.ProjectOnPlane(rotationDelta * transform.forward, Vector3.up);
+
+            if (forward.sqrMagnitude < 0.0001f)
+            {
+                return;
+            }
+                
+
+            float yaw = Vector3.SignedAngle(transform.forward, forward, Vector3.up);
+
+            Quaternion yawRotation = Quaternion.AngleAxis(yaw, Vector3.up);
+
+            transform.rotation = yawRotation * transform.rotation;
+            _horizontalVelocity = yawRotation * _horizontalVelocity;
+        }
+
+        private Vector3 GetSupportDisplacement()
+        {
+            if (!_supportSurface)
+            {
+                return Vector3.zero;
+            }
+
+            Quaternion rotationDelta = _supportSurface.rotation * Quaternion.Inverse(_previousSupportRotation);
+
+            Vector3 previousOffset = transform.position - _previousSupportPosition;
+            Vector3 carriedPosition = _supportSurface.position + rotationDelta * previousOffset;
+
+            return carriedPosition - transform.position;
         }
 
         private void SetActionsEnabled(bool enabled)

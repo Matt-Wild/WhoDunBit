@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: 2x2 Blue
+  m_Name: World 2x2 White
   m_Shader: {fileID: -6465566751694194690, guid: 47afde2518900b4449c6154f085d3fb5, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -62,7 +62,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Grid_Texture:
-        m_Texture: {fileID: 2800000, guid: 688d964a2b227db4b946780a2fb90c98, type: 3}
+        m_Texture: {fileID: 2800000, guid: 5eb690e9e23b5cb4693b7c3833fd942c, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:

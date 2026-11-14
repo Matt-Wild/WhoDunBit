@@ -20,8 +20,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: 2x2 Red
-  m_Shader: {fileID: -6465566751694194690, guid: 47afde2518900b4449c6154f085d3fb5, type: 3}
+  m_Name: Object 2x2 Black
+  m_Shader: {fileID: -6465566751694194690, guid: 1b265a0b8ebe8c149bf8693e09d7bb6b, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -62,7 +62,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Grid_Texture:
-        m_Texture: {fileID: 2800000, guid: 17d24d90d63ff424cb1e7d1618708a0a, type: 3}
+        m_Texture: {fileID: 2800000, guid: 7ec4783a581a7194ba69650a12cfb6f1, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:

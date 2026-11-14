@@ -206,7 +206,7 @@ MonoBehaviour:
   _mouseSensitivity: 0.1
   _groundControl: 1
   _airControl: 0.4
-  _airDrag: 0.04
+  _airDrag: 0.02
   _acceleration: 10
   _walkSpeed: 1.9
   _runSpeed: 4
@@ -215,6 +215,9 @@ MonoBehaviour:
   _gravity: -20
   _jumpStrength: 7
   _heavyLandingMinSpeed: 8
+  _ignoredSupportLayers:
+    serializedVersion: 2
+    m_Bits: 50
   _moveAction: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   _walkAction: {fileID: -3009278295278145618, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   _sprintAction: {fileID: -7471211009204490832, guid: 052faaac586de48259a63d0c4782560b, type: 3}
