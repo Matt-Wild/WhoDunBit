@@ -18,6 +18,7 @@ namespace WhoDunBit.Player
         [Header("Landing")]
         [Tooltip("Downward impact speed in metres per second that produces maximum landing volume and range.")]
         [SerializeField, Min(0.1f)] private float _maxLandingSpeed = 16f;
+        [SerializeField, Min(0f)] private float _minimumAirborneDuration = 0.1f;
 
         private readonly Transform[] _footBones = new Transform[2];
         private readonly FootstepSettings[] _pendingFootsteps = new FootstepSettings[2];
@@ -29,6 +30,7 @@ namespace WhoDunBit.Player
 
         private MovementState _previousState;
         private bool _hasPreviousState;
+        private float _airborneSince;
 
         public override void Init(PlayerMaster master)
         {
@@ -75,11 +77,18 @@ namespace WhoDunBit.Player
             {
                 _previousState = state;
                 _hasPreviousState = true;
+                _airborneSince = Time.time;
                 return;
             }
 
+            // Record when the displayed player leaves the ground
+            if (_previousState.Grounded && !state.Grounded)
+            {
+                _airborneSince = Time.time;
+            }
+
             bool jumped = state.JumpSequence != _previousState.JumpSequence && !state.Grounded;
-            bool landed = !_previousState.Grounded && state.Grounded;
+            bool landed = !_previousState.Grounded && state.Grounded && Time.time - _airborneSince >= _minimumAirborneDuration;
             _previousState = state;
 
             if (!jumped && !landed)
