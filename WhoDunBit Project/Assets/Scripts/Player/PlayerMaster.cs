@@ -9,6 +9,7 @@ namespace WhoDunBit.Player
         [SerializeField] private PlayerMovement _movement;
         [SerializeField] private PlayerAnimation _animation;
         [SerializeField] private PlayerCamera _camera;
+        [SerializeField] private PlayerAudio _audio;
 
         // Fetched player behaviours
         private PlayerAvatar _avatar;
@@ -23,6 +24,7 @@ namespace WhoDunBit.Player
         public PlayerMovement Movement => _movement;
         public PlayerAnimation Animation => _animation;
         public PlayerCamera Camera => _camera;
+        public PlayerAudio Audio => _audio;
         public PlayerAvatar Avatar => _avatar;
 
         public bool IsLocallyControlled => _isLocallyControlled;
@@ -49,6 +51,7 @@ namespace WhoDunBit.Player
             _movement.Init(this);
             _animation.Init(this);
             _camera.Init(this);
+            _audio.Init(this);
 
             // Avatar is fetched so guard against null reference
             if (_avatar)

@@ -1,0 +1,77 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56e9f163c7f09c84f8ee6038e3ae2f1e, type: 3}
+  m_Name: Gravel
+  m_EditorClassIdentifier: Assembly-CSharp::WhoDunBit.SurfaceData
+  _id: 30
+  _walking:
+    _clips:
+    - {fileID: 8300000, guid: e27917ea5f33ad848a7799e2cfc57ea7, type: 3}
+    - {fileID: 8300000, guid: b71ec42e4cd786947a52d92e69cff580, type: 3}
+    - {fileID: 8300000, guid: d3806ce3b5612ff40ae5c8b56ec2aff9, type: 3}
+    - {fileID: 8300000, guid: 17095089def0273408fd44777e381972, type: 3}
+    - {fileID: 8300000, guid: 53ce639b008372a4d982dbf5be76ac61, type: 3}
+    - {fileID: 8300000, guid: 49ec0551197568d41b7e5751da9146f3, type: 3}
+    - {fileID: 8300000, guid: ff546e65eadaa344b804c70566f43f89, type: 3}
+    - {fileID: 8300000, guid: a4e99fff4efe2a1479efc346c3971022, type: 3}
+    - {fileID: 8300000, guid: 32fe8f742c3c31f4a8916adca0a00c49, type: 3}
+    - {fileID: 8300000, guid: 0879db88697789a489deb706b3c2d92b, type: 3}
+    _volumeRange: {x: 0.17, y: 0.21}
+    _pitchRange: {x: 0.95, y: 1.05}
+    _range: 6
+  _running:
+    _clips:
+    - {fileID: 8300000, guid: d6c0a9feb7921114a995ebefa845cd41, type: 3}
+    - {fileID: 8300000, guid: e915dd242a323b5438e58e942e3e1879, type: 3}
+    - {fileID: 8300000, guid: 94f0ee2da56e0ce4cacf7397277fff06, type: 3}
+    - {fileID: 8300000, guid: 2f482a1aacb6a974f804e35b9728e388, type: 3}
+    - {fileID: 8300000, guid: d69349c153080ef41b4ba0d0cb5b2e74, type: 3}
+    - {fileID: 8300000, guid: c8d92e834a182914aa9279d799daf928, type: 3}
+    - {fileID: 8300000, guid: 7054c4dc49895a9489c1d84f01495717, type: 3}
+    - {fileID: 8300000, guid: ac5e9762bda438247823db67ae55986c, type: 3}
+    - {fileID: 8300000, guid: 5f186ccc61698a64ba05458842511b63, type: 3}
+    - {fileID: 8300000, guid: 6b7a80e4612d0ab42a13df1d6a8a97fe, type: 3}
+    _volumeRange: {x: 0.21, y: 0.26}
+    _pitchRange: {x: 0.95, y: 1.05}
+    _range: 14
+  _sprinting:
+    _clips:
+    - {fileID: 8300000, guid: d6c0a9feb7921114a995ebefa845cd41, type: 3}
+    - {fileID: 8300000, guid: e915dd242a323b5438e58e942e3e1879, type: 3}
+    - {fileID: 8300000, guid: 94f0ee2da56e0ce4cacf7397277fff06, type: 3}
+    - {fileID: 8300000, guid: 2f482a1aacb6a974f804e35b9728e388, type: 3}
+    - {fileID: 8300000, guid: d69349c153080ef41b4ba0d0cb5b2e74, type: 3}
+    - {fileID: 8300000, guid: c8d92e834a182914aa9279d799daf928, type: 3}
+    - {fileID: 8300000, guid: 7054c4dc49895a9489c1d84f01495717, type: 3}
+    - {fileID: 8300000, guid: ac5e9762bda438247823db67ae55986c, type: 3}
+    - {fileID: 8300000, guid: 5f186ccc61698a64ba05458842511b63, type: 3}
+    - {fileID: 8300000, guid: 6b7a80e4612d0ab42a13df1d6a8a97fe, type: 3}
+    _volumeRange: {x: 0.38, y: 0.45}
+    _pitchRange: {x: 0.95, y: 1.05}
+    _range: 16.8
+  _jumping:
+    _clips:
+    - {fileID: 8300000, guid: 244bdb17e95280849b6ac23ecf6a7c06, type: 3}
+    - {fileID: 8300000, guid: aec504a051f5fa54a80cdb51cd63b7fe, type: 3}
+    - {fileID: 8300000, guid: 464253e707fde824f90acbfb2c4cc768, type: 3}
+    _volumeRange: {x: 0.65, y: 0.8}
+    _pitchRange: {x: 0.95, y: 1.05}
+    _range: 6
+  _landing:
+    _clips:
+    - {fileID: 8300000, guid: 6987336607bd11e44a6e1fe830b299ca, type: 3}
+    - {fileID: 8300000, guid: 3ac641c7fd44b9c4ea78917218d24ca0, type: 3}
+    - {fileID: 8300000, guid: 7531b85a479a91d4fa969f659fa8e2cc, type: 3}
+    _volumeRange: {x: 0.06, y: 0.6}
+    _pitchRange: {x: 0.95, y: 1.05}
+    _range: 23.52
+    _minimumRange: 7

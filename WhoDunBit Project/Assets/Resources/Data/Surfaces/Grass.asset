@@ -1,0 +1,91 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56e9f163c7f09c84f8ee6038e3ae2f1e, type: 3}
+  m_Name: Grass
+  m_EditorClassIdentifier: Assembly-CSharp::WhoDunBit.SurfaceData
+  _id: 20
+  _walking:
+    _clips:
+    - {fileID: 8300000, guid: bdc8c6f7323305a46a19ff0131bd6c0c, type: 3}
+    - {fileID: 8300000, guid: 914422f4d5820fc42bbbd4068bf4e1da, type: 3}
+    - {fileID: 8300000, guid: ce91b20739a627749a89e554513971c7, type: 3}
+    - {fileID: 8300000, guid: aacb8d5758646c74f9335ad3184589fc, type: 3}
+    - {fileID: 8300000, guid: e976a93ae73d9514b89113d51243cc9b, type: 3}
+    - {fileID: 8300000, guid: 0f3ac73fd73272c44a6a08d805aabf2e, type: 3}
+    - {fileID: 8300000, guid: 7047773cdaec2834e890014b2da5a28d, type: 3}
+    - {fileID: 8300000, guid: dcca622c0fe447540a04ec10e9c52307, type: 3}
+    - {fileID: 8300000, guid: ff1c4adb46454da4d98ae19eb7dafcb1, type: 3}
+    - {fileID: 8300000, guid: 373fc4be1f6031447b954553f21fc39d, type: 3}
+    _volumeRange: {x: 0.17, y: 0.21}
+    _pitchRange: {x: 0.95, y: 1.05}
+    _range: 4
+  _running:
+    _clips:
+    - {fileID: 8300000, guid: 0f1278ef65624c945ae23561a6a03ff7, type: 3}
+    - {fileID: 8300000, guid: f6b23210e845ba348bcd4d7cf053346d, type: 3}
+    - {fileID: 8300000, guid: 19d258e3320535e42ba80d998cd68fac, type: 3}
+    - {fileID: 8300000, guid: dffe68a175b2b97458d33b57cd146028, type: 3}
+    - {fileID: 8300000, guid: fdf099727ac99ac40bffdafcb9a25bdf, type: 3}
+    - {fileID: 8300000, guid: c7ddb13a45b544548a134f07587e0ab4, type: 3}
+    - {fileID: 8300000, guid: 6da709397dd01df48baad2ea68dcf521, type: 3}
+    - {fileID: 8300000, guid: 8ebdbf6c983f64845bf00bad582759d4, type: 3}
+    - {fileID: 8300000, guid: 5b79be6da199e9a46b4f520b93268e4e, type: 3}
+    - {fileID: 8300000, guid: 372ef7d4e915c214ba0a918d3c3f883b, type: 3}
+    _volumeRange: {x: 0.21, y: 0.26}
+    _pitchRange: {x: 0.95, y: 1.05}
+    _range: 9.8
+  _sprinting:
+    _clips:
+    - {fileID: 8300000, guid: 0f1278ef65624c945ae23561a6a03ff7, type: 3}
+    - {fileID: 8300000, guid: f6b23210e845ba348bcd4d7cf053346d, type: 3}
+    - {fileID: 8300000, guid: 19d258e3320535e42ba80d998cd68fac, type: 3}
+    - {fileID: 8300000, guid: dffe68a175b2b97458d33b57cd146028, type: 3}
+    - {fileID: 8300000, guid: fdf099727ac99ac40bffdafcb9a25bdf, type: 3}
+    - {fileID: 8300000, guid: c7ddb13a45b544548a134f07587e0ab4, type: 3}
+    - {fileID: 8300000, guid: 6da709397dd01df48baad2ea68dcf521, type: 3}
+    - {fileID: 8300000, guid: 8ebdbf6c983f64845bf00bad582759d4, type: 3}
+    - {fileID: 8300000, guid: 5b79be6da199e9a46b4f520b93268e4e, type: 3}
+    - {fileID: 8300000, guid: 372ef7d4e915c214ba0a918d3c3f883b, type: 3}
+    _volumeRange: {x: 0.38, y: 0.45}
+    _pitchRange: {x: 0.95, y: 1.05}
+    _range: 12
+  _jumping:
+    _clips:
+    - {fileID: 8300000, guid: 54d1631ef077a3345ad6bfc59fb52324, type: 3}
+    - {fileID: 8300000, guid: 4b58f3a14bd02504bad77023ca2cb7b5, type: 3}
+    - {fileID: 8300000, guid: 670f2089907eb1e4aa1f9b6ad017e5ab, type: 3}
+    - {fileID: 8300000, guid: afe5e3d798251c94d827ab65d5699e6d, type: 3}
+    - {fileID: 8300000, guid: 1e60f1a75285dd24c9831b4f00bf2dd7, type: 3}
+    - {fileID: 8300000, guid: c79beb13fedea234d9be8fcf8cecb5c0, type: 3}
+    - {fileID: 8300000, guid: dbe2d6682c053774d95c139b1912d5a0, type: 3}
+    - {fileID: 8300000, guid: 17b6b34e3bcbb764a995eec7134d8403, type: 3}
+    - {fileID: 8300000, guid: c9ef7d84a3748774eaf04e6ae2be8cbe, type: 3}
+    - {fileID: 8300000, guid: 6a4f0f8b4e69d4a4a9e9695eef95a4d8, type: 3}
+    _volumeRange: {x: 0.65, y: 0.8}
+    _pitchRange: {x: 0.95, y: 1.05}
+    _range: 4
+  _landing:
+    _clips:
+    - {fileID: 8300000, guid: e5d21c017250c334caa8553db285c697, type: 3}
+    - {fileID: 8300000, guid: 077476ca47c9bcb4684d6a74f5c356c8, type: 3}
+    - {fileID: 8300000, guid: 007773f6aaf3e4f4ea305cb013b23233, type: 3}
+    - {fileID: 8300000, guid: 97001537a3ff4d440b62c3311339551a, type: 3}
+    - {fileID: 8300000, guid: 7d376aa1f94f7f748ace6f16f75edd61, type: 3}
+    - {fileID: 8300000, guid: be277922cf70cfc4ab60a510abebfdc1, type: 3}
+    - {fileID: 8300000, guid: 7d08a816b94b4fc47a325a1ce96e7ac7, type: 3}
+    - {fileID: 8300000, guid: a4c7995d64cd92c42a0e14f8ceb8fe63, type: 3}
+    - {fileID: 8300000, guid: 3d7ec250cfbb5fd4e9cebc20f5fc592c, type: 3}
+    - {fileID: 8300000, guid: 63ebaeeb5642f1d4c877673046df3da0, type: 3}
+    _volumeRange: {x: 0.04, y: 0.55}
+    _pitchRange: {x: 0.95, y: 1.05}
+    _range: 16.8
+    _minimumRange: 5.04

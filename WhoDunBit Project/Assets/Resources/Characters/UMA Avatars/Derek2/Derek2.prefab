@@ -2071,6 +2071,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7154816985994279504}
   - component: {fileID: 344331465252644910}
+  - component: {fileID: 1388141707300397593}
   - component: {fileID: 7104034192240698189}
   m_Layer: 0
   m_Name: Derek2
@@ -2110,6 +2111,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WhoDunBit.Player.PlayerAvatar
   _headRenderer: {fileID: 8476226296047062809}
+  _cameraTarget: {fileID: 0}
+--- !u!114 &1388141707300397593
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3308312718682082762}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 819b1f281db257745b8f898abc75e5e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WhoDunBit.Player.PlayerAnimationEvents
 --- !u!95 &7104034192240698189
 Animator:
   serializedVersion: 7

@@ -1,0 +1,85 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56e9f163c7f09c84f8ee6038e3ae2f1e, type: 3}
+  m_Name: Snow
+  m_EditorClassIdentifier: Assembly-CSharp::WhoDunBit.SurfaceData
+  _id: 100
+  _walking:
+    _clips:
+    - {fileID: 8300000, guid: 4a098ddc4ef2cc84399ad531060ba422, type: 3}
+    - {fileID: 8300000, guid: ee9571a1247bcd94ea84e3f8ba82f1b5, type: 3}
+    - {fileID: 8300000, guid: d55f80c29c711694f9ed6300e43c7f35, type: 3}
+    - {fileID: 8300000, guid: e02600ff044adb84fbc274d4c1542085, type: 3}
+    - {fileID: 8300000, guid: 086cfa8d57816154689ce8446238bb4c, type: 3}
+    - {fileID: 8300000, guid: c7dbdecc6a7a7f94ba0cc043c4bdfc93, type: 3}
+    - {fileID: 8300000, guid: 8bf592f6639b5644d95fa9e4e0185666, type: 3}
+    - {fileID: 8300000, guid: fdfb76c295a3ffd419fa0da7fe601608, type: 3}
+    - {fileID: 8300000, guid: 15d108005d78ee447a2387ac6feb1979, type: 3}
+    - {fileID: 8300000, guid: f760908a694e6e344959c96a8895a996, type: 3}
+    - {fileID: 8300000, guid: 77744d3bf670509498f505055f3a5379, type: 3}
+    - {fileID: 8300000, guid: 8ded8e9ef992ca8469ed3bea4a6bb5b3, type: 3}
+    _volumeRange: {x: 0.17, y: 0.21}
+    _pitchRange: {x: 0.95, y: 1.05}
+    _range: 4.8
+  _running:
+    _clips:
+    - {fileID: 8300000, guid: 5434b04164ee8e743a307d3a22a3f8d2, type: 3}
+    - {fileID: 8300000, guid: 6bcee9ee6ab80b548a36e41d0d47cad1, type: 3}
+    - {fileID: 8300000, guid: 2556f3ca254fc6140843c295e196f81b, type: 3}
+    - {fileID: 8300000, guid: fb2ff80a57319eb489a3535db523f367, type: 3}
+    - {fileID: 8300000, guid: 8c70b0ad96abb6d439fe1c2cdbc0a753, type: 3}
+    - {fileID: 8300000, guid: f2f71bbf75d78ec47bd53b38987de3b0, type: 3}
+    - {fileID: 8300000, guid: 66548ce187209a34ea5c515e1b0bdb70, type: 3}
+    - {fileID: 8300000, guid: 205ee5510a63bb5469f6ddeee47d83e9, type: 3}
+    - {fileID: 8300000, guid: 9cd9a582e9713314a94db122e8a355dc, type: 3}
+    - {fileID: 8300000, guid: 7d6f8b243a8028b4582a40ac0ca94c99, type: 3}
+    _volumeRange: {x: 0.21, y: 0.26}
+    _pitchRange: {x: 0.95, y: 1.05}
+    _range: 9.8
+  _sprinting:
+    _clips:
+    - {fileID: 8300000, guid: 5434b04164ee8e743a307d3a22a3f8d2, type: 3}
+    - {fileID: 8300000, guid: 6bcee9ee6ab80b548a36e41d0d47cad1, type: 3}
+    - {fileID: 8300000, guid: 2556f3ca254fc6140843c295e196f81b, type: 3}
+    - {fileID: 8300000, guid: fb2ff80a57319eb489a3535db523f367, type: 3}
+    - {fileID: 8300000, guid: 8c70b0ad96abb6d439fe1c2cdbc0a753, type: 3}
+    - {fileID: 8300000, guid: f2f71bbf75d78ec47bd53b38987de3b0, type: 3}
+    - {fileID: 8300000, guid: 66548ce187209a34ea5c515e1b0bdb70, type: 3}
+    - {fileID: 8300000, guid: 205ee5510a63bb5469f6ddeee47d83e9, type: 3}
+    - {fileID: 8300000, guid: 9cd9a582e9713314a94db122e8a355dc, type: 3}
+    - {fileID: 8300000, guid: 7d6f8b243a8028b4582a40ac0ca94c99, type: 3}
+    _volumeRange: {x: 0.38, y: 0.45}
+    _pitchRange: {x: 0.95, y: 1.05}
+    _range: 12
+  _jumping:
+    _clips:
+    - {fileID: 8300000, guid: f789c663bf89d884c9f0cd6c293fbd64, type: 3}
+    - {fileID: 8300000, guid: ab6192da828fc3e4aaef21a4e9fc8b97, type: 3}
+    - {fileID: 8300000, guid: 8da80e2ceb4d03a4e839e69d1017ee05, type: 3}
+    - {fileID: 8300000, guid: 476c7e3a527c20d4992a24689a8e487e, type: 3}
+    - {fileID: 8300000, guid: b41e4484cdae9df4e981b44501ff5b2c, type: 3}
+    - {fileID: 8300000, guid: 92c8753ca6fefd846970530c268ef0e7, type: 3}
+    _volumeRange: {x: 0.65, y: 0.8}
+    _pitchRange: {x: 0.95, y: 1.05}
+    _range: 4.5
+  _landing:
+    _clips:
+    - {fileID: 8300000, guid: 99aa1de6628fb8c4bbac370ef5586b06, type: 3}
+    - {fileID: 8300000, guid: 4b183f8554e65a64c879c9852a108153, type: 3}
+    - {fileID: 8300000, guid: 513f69757bbce6f478391e6a13d240a3, type: 3}
+    - {fileID: 8300000, guid: 8a40263544953d34499db1b62c264656, type: 3}
+    - {fileID: 8300000, guid: 46be76f0575642b468e32fa4e55a7cb2, type: 3}
+    - {fileID: 8300000, guid: d406828790d8ef547b5f73b2a066e343, type: 3}
+    _volumeRange: {x: 0.05, y: 0.6}
+    _pitchRange: {x: 0.95, y: 1.05}
+    _range: 18.48
+    _minimumRange: 5.6

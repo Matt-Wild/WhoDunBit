@@ -1,0 +1,75 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56e9f163c7f09c84f8ee6038e3ae2f1e, type: 3}
+  m_Name: Dirt
+  m_EditorClassIdentifier: Assembly-CSharp::WhoDunBit.SurfaceData
+  _id: 10
+  _walking:
+    _clips:
+    - {fileID: 8300000, guid: 2bae1bbc60d7e77488dbcc960019a76f, type: 3}
+    - {fileID: 8300000, guid: 9247b6ccb952874488575419cf96f4e6, type: 3}
+    - {fileID: 8300000, guid: 54f8b0476c59e134085a78b59705eb5b, type: 3}
+    - {fileID: 8300000, guid: 176f6b45bb07c6d4b8a1f15f5355bde2, type: 3}
+    - {fileID: 8300000, guid: a8a5216193501a14cb746b7e23e12a22, type: 3}
+    - {fileID: 8300000, guid: a7c55f04d11ebcc479585a2886d2856c, type: 3}
+    - {fileID: 8300000, guid: ca850d07ddf57eb43a668d55d8a10732, type: 3}
+    - {fileID: 8300000, guid: c2bf0eac72652614f97a4ac95f169a01, type: 3}
+    - {fileID: 8300000, guid: 7c178b87e5462b44282796a03cb2a107, type: 3}
+    - {fileID: 8300000, guid: abee3fa08ea5cae47bc09d267f5aee08, type: 3}
+    _volumeRange: {x: 0.17, y: 0.21}
+    _pitchRange: {x: 0.95, y: 1.05}
+    _range: 4.8
+  _running:
+    _clips:
+    - {fileID: 8300000, guid: 8c1681b90d00a8e4aaed774e289c7af6, type: 3}
+    - {fileID: 8300000, guid: 981d4c4e436c25b48acfe8eb9e5c0ce7, type: 3}
+    - {fileID: 8300000, guid: f29697a8dc0a06c4c9fc02cc3caba3f7, type: 3}
+    - {fileID: 8300000, guid: 59e40fcc05c78d941bc287728bb608c8, type: 3}
+    - {fileID: 8300000, guid: d46da35ea22ddea42b4e1036189f67bf, type: 3}
+    - {fileID: 8300000, guid: 53c937fc44626a944b6f42d7f77b6425, type: 3}
+    - {fileID: 8300000, guid: 5340e49f3781291498b19df52ead642a, type: 3}
+    - {fileID: 8300000, guid: b0d59bc4ee4ecbc4c94b1af7cd96feea, type: 3}
+    - {fileID: 8300000, guid: 7d6b3eaa519d9244a9d4f9862ba85662, type: 3}
+    - {fileID: 8300000, guid: 6663adf9be16d03409ba3444c124876b, type: 3}
+    _volumeRange: {x: 0.21, y: 0.26}
+    _pitchRange: {x: 0.95, y: 1.05}
+    _range: 11.2
+  _sprinting:
+    _clips:
+    - {fileID: 8300000, guid: 8c1681b90d00a8e4aaed774e289c7af6, type: 3}
+    - {fileID: 8300000, guid: 981d4c4e436c25b48acfe8eb9e5c0ce7, type: 3}
+    - {fileID: 8300000, guid: f29697a8dc0a06c4c9fc02cc3caba3f7, type: 3}
+    - {fileID: 8300000, guid: 59e40fcc05c78d941bc287728bb608c8, type: 3}
+    - {fileID: 8300000, guid: d46da35ea22ddea42b4e1036189f67bf, type: 3}
+    - {fileID: 8300000, guid: 53c937fc44626a944b6f42d7f77b6425, type: 3}
+    - {fileID: 8300000, guid: 5340e49f3781291498b19df52ead642a, type: 3}
+    - {fileID: 8300000, guid: b0d59bc4ee4ecbc4c94b1af7cd96feea, type: 3}
+    - {fileID: 8300000, guid: 7d6b3eaa519d9244a9d4f9862ba85662, type: 3}
+    - {fileID: 8300000, guid: 6663adf9be16d03409ba3444c124876b, type: 3}
+    _volumeRange: {x: 0.38, y: 0.45}
+    _pitchRange: {x: 0.95, y: 1.05}
+    _range: 14.4
+  _jumping:
+    _clips:
+    - {fileID: 8300000, guid: 99a4d98c3c945f448a5ac40739b4a381, type: 3}
+    - {fileID: 8300000, guid: a759113c0fff3cf4d88ec1a53d22361d, type: 3}
+    _volumeRange: {x: 0.65, y: 0.8}
+    _pitchRange: {x: 0.95, y: 1.05}
+    _range: 5
+  _landing:
+    _clips:
+    - {fileID: 8300000, guid: c63613c6f4574e944b1d92dec400ce54, type: 3}
+    - {fileID: 8300000, guid: 15a7f871a63a3144d9d5969e2a466f2a, type: 3}
+    _volumeRange: {x: 0.04, y: 0.46}
+    _pitchRange: {x: 0.95, y: 1.05}
+    _range: 20.16
+    _minimumRange: 5.6

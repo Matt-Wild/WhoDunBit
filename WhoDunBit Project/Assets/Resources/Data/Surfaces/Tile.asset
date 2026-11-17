@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56e9f163c7f09c84f8ee6038e3ae2f1e, type: 3}
+  m_Name: Tile
+  m_EditorClassIdentifier: Assembly-CSharp::WhoDunBit.SurfaceData
+  _id: 110
+  _walking:
+    _clips:
+    - {fileID: 8300000, guid: 1a0176ccfc52f6a48bae938b6209c791, type: 3}
+    - {fileID: 8300000, guid: 6eea5ad15f4c19344a0f72001656b426, type: 3}
+    - {fileID: 8300000, guid: bcc11990a51b5de4ea4772597d85d036, type: 3}
+    - {fileID: 8300000, guid: aa4ab1cb061c63e4ba3e0d414310635c, type: 3}
+    - {fileID: 8300000, guid: 8fc4308fd7316b840b399b60a35cdb28, type: 3}
+    - {fileID: 8300000, guid: f5f8f14cb552339478c48339d3984832, type: 3}
+    - {fileID: 8300000, guid: 07252fc5a79475d4cb3357667ec0bdc8, type: 3}
+    - {fileID: 8300000, guid: d3c4ad96ee3e8af43bd23e71290961cc, type: 3}
+    _volumeRange: {x: 0.17, y: 0.21}
+    _pitchRange: {x: 0.95, y: 1.05}
+    _range: 4.8
+  _running:
+    _clips:
+    - {fileID: 8300000, guid: 0f5b52cbcda747d4eb5237f48fdfddc8, type: 3}
+    - {fileID: 8300000, guid: 9283a41c80336f143877d41f10d2c126, type: 3}
+    - {fileID: 8300000, guid: 1a6a697d9ff440948ba38fec92082507, type: 3}
+    - {fileID: 8300000, guid: 8a3fe41ed208b66409d362da822e1fa1, type: 3}
+    - {fileID: 8300000, guid: 51dd22275ee6c214d9f1b853fd040d53, type: 3}
+    - {fileID: 8300000, guid: dafc7fa0560a11340a4baad2e22b562a, type: 3}
+    _volumeRange: {x: 0.21, y: 0.26}
+    _pitchRange: {x: 0.95, y: 1.05}
+    _range: 11.2
+  _sprinting:
+    _clips:
+    - {fileID: 8300000, guid: 0f5b52cbcda747d4eb5237f48fdfddc8, type: 3}
+    - {fileID: 8300000, guid: 9283a41c80336f143877d41f10d2c126, type: 3}
+    - {fileID: 8300000, guid: 1a6a697d9ff440948ba38fec92082507, type: 3}
+    - {fileID: 8300000, guid: 8a3fe41ed208b66409d362da822e1fa1, type: 3}
+    - {fileID: 8300000, guid: 51dd22275ee6c214d9f1b853fd040d53, type: 3}
+    - {fileID: 8300000, guid: dafc7fa0560a11340a4baad2e22b562a, type: 3}
+    _volumeRange: {x: 0.38, y: 0.45}
+    _pitchRange: {x: 0.95, y: 1.05}
+    _range: 14.4
+  _jumping:
+    _clips:
+    - {fileID: 8300000, guid: 2d6ae94a2edcad3499426b6229629417, type: 3}
+    - {fileID: 8300000, guid: 45bfb8ed914710c46a36c7b1febcf59d, type: 3}
+    - {fileID: 8300000, guid: e5b69981b2066884584ec8fcb3ca5488, type: 3}
+    _volumeRange: {x: 0.65, y: 0.8}
+    _pitchRange: {x: 0.95, y: 1.05}
+    _range: 5
+  _landing:
+    _clips:
+    - {fileID: 8300000, guid: 6061bf301350f24478f581ecc0ac189c, type: 3}
+    - {fileID: 8300000, guid: 4a2bf6ba2f901dc43bc7bafdbbda2632, type: 3}
+    - {fileID: 8300000, guid: f2cb5eee4f6a65b4dad50f2fde954fa0, type: 3}
+    _volumeRange: {x: 0.07, y: 0.68}
+    _pitchRange: {x: 0.95, y: 1.05}
+    _range: 20.16
+    _minimumRange: 7

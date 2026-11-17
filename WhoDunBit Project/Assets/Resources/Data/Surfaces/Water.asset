@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56e9f163c7f09c84f8ee6038e3ae2f1e, type: 3}
+  m_Name: Water
+  m_EditorClassIdentifier: Assembly-CSharp::WhoDunBit.SurfaceData
+  _id: 120
+  _walking:
+    _clips:
+    - {fileID: 8300000, guid: 973538091b54a7f48a7e4f05c515425a, type: 3}
+    - {fileID: 8300000, guid: 7630bb4ef855dac4487acd471e39f0b9, type: 3}
+    - {fileID: 8300000, guid: 3e779910e4e14b643bd9c4fa5f5d8b23, type: 3}
+    - {fileID: 8300000, guid: 5215870c33b84d542b6a29b6c6c8155e, type: 3}
+    - {fileID: 8300000, guid: 3de31b8e9ab7da04bb35714c6520f13d, type: 3}
+    - {fileID: 8300000, guid: 514ab406a4e384941b2739cead7b2fcb, type: 3}
+    - {fileID: 8300000, guid: 7d88670d83212e64babdba97710584bf, type: 3}
+    - {fileID: 8300000, guid: 18d0137001b0f864386f19ba3396b5fd, type: 3}
+    - {fileID: 8300000, guid: 54b8509cd5e074346a39793433ea8586, type: 3}
+    - {fileID: 8300000, guid: 5e26e0340d6d98841968013c9c47b79d, type: 3}
+    _volumeRange: {x: 0.17, y: 0.21}
+    _pitchRange: {x: 0.95, y: 1.05}
+    _range: 8
+  _running:
+    _clips:
+    - {fileID: 8300000, guid: b36c930a16e5b0f479509bf9ea4181b0, type: 3}
+    - {fileID: 8300000, guid: 0f22c21bba373f54aa38a4daa17c1ffb, type: 3}
+    - {fileID: 8300000, guid: f64035b8c7ea28e46a702a1177e529db, type: 3}
+    - {fileID: 8300000, guid: 76a21290b1716174ba2b91638cbd2233, type: 3}
+    - {fileID: 8300000, guid: e82f23d6fe01fbd4490418769625af75, type: 3}
+    _volumeRange: {x: 0.21, y: 0.26}
+    _pitchRange: {x: 0.95, y: 1.05}
+    _range: 16.8
+  _sprinting:
+    _clips:
+    - {fileID: 8300000, guid: b36c930a16e5b0f479509bf9ea4181b0, type: 3}
+    - {fileID: 8300000, guid: 0f22c21bba373f54aa38a4daa17c1ffb, type: 3}
+    - {fileID: 8300000, guid: f64035b8c7ea28e46a702a1177e529db, type: 3}
+    - {fileID: 8300000, guid: 76a21290b1716174ba2b91638cbd2233, type: 3}
+    - {fileID: 8300000, guid: e82f23d6fe01fbd4490418769625af75, type: 3}
+    _volumeRange: {x: 0.38, y: 0.45}
+    _pitchRange: {x: 0.95, y: 1.05}
+    _range: 21.6
+  _jumping:
+    _clips:
+    - {fileID: 8300000, guid: 0476bbe5b8f5f384ebb346162235d531, type: 3}
+    - {fileID: 8300000, guid: d3a664593553e94479fbf69e5597aecb, type: 3}
+    - {fileID: 8300000, guid: 5bdb1efeb9d9d6d46875ee45bd9f9d4d, type: 3}
+    - {fileID: 8300000, guid: 30acb60ba31b2bb45bf08273f47d7cdd, type: 3}
+    - {fileID: 8300000, guid: d957ea6683edad048a2352b69f03d8d1, type: 3}
+    - {fileID: 8300000, guid: 68b05c115f4c5b746b815f86cfe7740c, type: 3}
+    _volumeRange: {x: 0.65, y: 0.8}
+    _pitchRange: {x: 0.95, y: 1.05}
+    _range: 8
+  _landing:
+    _clips:
+    - {fileID: 8300000, guid: b6e5c7e5df67601468692b602bd0c0ba, type: 3}
+    - {fileID: 8300000, guid: 0a4fc8678b4e44a489562dfddd2ee74a, type: 3}
+    - {fileID: 8300000, guid: 212494f1273c6ef468fe06daf5fc1935, type: 3}
+    _volumeRange: {x: 0.08, y: 0.58}
+    _pitchRange: {x: 0.95, y: 1.05}
+    _range: 33.6
+    _minimumRange: 9.8

@@ -1,0 +1,82 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56e9f163c7f09c84f8ee6038e3ae2f1e, type: 3}
+  m_Name: Rock
+  m_EditorClassIdentifier: Assembly-CSharp::WhoDunBit.SurfaceData
+  _id: 80
+  _walking:
+    _clips:
+    - {fileID: 8300000, guid: adcb74fc903d4134695e62f424eaf8ca, type: 3}
+    - {fileID: 8300000, guid: c6d1d7f4c31ef2f4f87543d12fcca560, type: 3}
+    - {fileID: 8300000, guid: 5367d542bdf8a164e8c56457bd0b8ebb, type: 3}
+    - {fileID: 8300000, guid: db2104557c2f9664a8be64a347243554, type: 3}
+    - {fileID: 8300000, guid: ebfbb82cea6b47b4c8d50cadeefd6b56, type: 3}
+    - {fileID: 8300000, guid: dec22be0b94a45e4aae25dc3e50add9e, type: 3}
+    - {fileID: 8300000, guid: 0d820f60a600e21459a5dbcc40cd143f, type: 3}
+    - {fileID: 8300000, guid: 4e7d7522b4b3c6b428d617faeac24d67, type: 3}
+    - {fileID: 8300000, guid: 58cbcfb161adac04495b40d53e6b69b8, type: 3}
+    _volumeRange: {x: 0.17, y: 0.21}
+    _pitchRange: {x: 0.95, y: 1.05}
+    _range: 4.8
+  _running:
+    _clips:
+    - {fileID: 8300000, guid: 62ced45cba169934caa21666cf17215f, type: 3}
+    - {fileID: 8300000, guid: 19cc73f6bcf3d924091f74ae2a625fdf, type: 3}
+    - {fileID: 8300000, guid: 2fb16f8a2e9b89b44b782cd9e813e4a1, type: 3}
+    - {fileID: 8300000, guid: 7b0f16e2a5e4a284eb6327395e8c76d1, type: 3}
+    - {fileID: 8300000, guid: 73a528a37313cc9408d001b8121ab774, type: 3}
+    - {fileID: 8300000, guid: 25b73432523041b4da0519a6db2fb06e, type: 3}
+    - {fileID: 8300000, guid: cb14b92fd81f426418394684aad71f88, type: 3}
+    - {fileID: 8300000, guid: aa5a36510e2f11e4b86e4e7e70494b61, type: 3}
+    - {fileID: 8300000, guid: f10f30f35d87a354b82ca3afbfc7c4d4, type: 3}
+    - {fileID: 8300000, guid: aad49c1ea31734740b6d85fcec204330, type: 3}
+    _volumeRange: {x: 0.21, y: 0.26}
+    _pitchRange: {x: 0.95, y: 1.05}
+    _range: 11.2
+  _sprinting:
+    _clips:
+    - {fileID: 8300000, guid: 62ced45cba169934caa21666cf17215f, type: 3}
+    - {fileID: 8300000, guid: 19cc73f6bcf3d924091f74ae2a625fdf, type: 3}
+    - {fileID: 8300000, guid: 2fb16f8a2e9b89b44b782cd9e813e4a1, type: 3}
+    - {fileID: 8300000, guid: 7b0f16e2a5e4a284eb6327395e8c76d1, type: 3}
+    - {fileID: 8300000, guid: 73a528a37313cc9408d001b8121ab774, type: 3}
+    - {fileID: 8300000, guid: 25b73432523041b4da0519a6db2fb06e, type: 3}
+    - {fileID: 8300000, guid: cb14b92fd81f426418394684aad71f88, type: 3}
+    - {fileID: 8300000, guid: aa5a36510e2f11e4b86e4e7e70494b61, type: 3}
+    - {fileID: 8300000, guid: f10f30f35d87a354b82ca3afbfc7c4d4, type: 3}
+    - {fileID: 8300000, guid: aad49c1ea31734740b6d85fcec204330, type: 3}
+    _volumeRange: {x: 0.38, y: 0.45}
+    _pitchRange: {x: 0.95, y: 1.05}
+    _range: 14.4
+  _jumping:
+    _clips:
+    - {fileID: 8300000, guid: 220529994fcddc44789a89dd73d29cc7, type: 3}
+    - {fileID: 8300000, guid: c9c6928a74353644b87a263e9a6f9635, type: 3}
+    - {fileID: 8300000, guid: ac52754507c180d439798c5ecd3228a2, type: 3}
+    - {fileID: 8300000, guid: dbb535026a0988644aef254e98a8f4a4, type: 3}
+    - {fileID: 8300000, guid: 5f52ea0f620f8264d9cb71639569188d, type: 3}
+    - {fileID: 8300000, guid: dcddfb6822448a14a8bea0c7999b1175, type: 3}
+    _volumeRange: {x: 0.65, y: 0.8}
+    _pitchRange: {x: 0.95, y: 1.05}
+    _range: 5
+  _landing:
+    _clips:
+    - {fileID: 8300000, guid: 8741218a59fe84c439b11647ee52b70d, type: 3}
+    - {fileID: 8300000, guid: 24ae8d9b81eebc44db8c2ede3153e8b5, type: 3}
+    - {fileID: 8300000, guid: ddc518a35c0d9a8428f8689902954bb8, type: 3}
+    - {fileID: 8300000, guid: d8466e5527baee14796c5827e57f4000, type: 3}
+    - {fileID: 8300000, guid: 0545c4619fc4b0f45b7b40b7f2d0992a, type: 3}
+    - {fileID: 8300000, guid: 09c33609e8b976c4187c156345d89887, type: 3}
+    _volumeRange: {x: 0.06, y: 0.53}
+    _pitchRange: {x: 0.95, y: 1.05}
+    _range: 20.16
+    _minimumRange: 5.6

@@ -1,8 +1,8 @@
 # WhoDunBit documentation
 
-**Purpose:** Index the project's design documentation and documentation standards.  
+**Purpose:** Index the project's design, technical and research documentation and documentation standards.  
 **Created:** 14 October 2026  
-**Updated:** 14 October 2026  
+**Updated:** 16 November 2026  
 **Related documents:** [Documentation Standards](Documentation%20Standards.md)
 
 Design documentation for WhoDunBit, a multiplayer social deduction FPS. The GDD and TDD are pre-production drafts.
@@ -14,6 +14,7 @@ Design documentation for WhoDunBit, a multiplayer social deduction FPS. The GDD 
 | [Initial Project Configuration](Project%20Configuration.md) | Applied Unity settings, before/after values, retained defaults, Git exclusions and validation scope. |
 | [Main Menu and Multiplayer Entry Plan](Multiplayer%20Menu%20Plan.md) | Proposed Unity Services host/join milestone, profile flow, waiting map, hotjoining, implementation sequence and acceptance checks. |
 | [Documentation Standards](Documentation%20Standards.md) | Header format and metadata conventions for repository documentation. |
+| [Footstep Sound Library Research](Research/Footstep%20Sound%20Libraries.md) | Free and paid audio-library comparison, movement/surface coverage, licensing notes and audition recommendations. |
 
 ## Document scope
 

@@ -85,7 +85,12 @@ namespace WhoDunBit.Player
                 return;
             }
 
-            Vector3 localVelocity = Master.Movement.LocalVelocity;
+            if (!Master.Movement.TryGetAnimationState(out MovementState movementState))
+            {
+                return;
+            }
+
+            Vector3 localVelocity = movementState.LocalVelocity;
             Vector2 horizontalVelocity = new(localVelocity.x, localVelocity.z);
 
             // Smooth the raw velocity before clamping
@@ -129,7 +134,6 @@ namespace WhoDunBit.Player
                 axes = Vector2.zero;
             }
 
-            MovementState movementState = Master.Movement.MovementState;
             if (movementState.Grounded)
             {
                 _lastGrounded = Time.time;
@@ -166,7 +170,10 @@ namespace WhoDunBit.Player
 
         private void OnLanded(float impactSpeed)
         {
-            _waitingForAirborne = false;
+            if (Master.IsLocallyControlled)
+            {
+                _waitingForAirborne = false;
+            }
         }
 
         private void CompensateForSkinWidth()
